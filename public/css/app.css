@@ -1,0 +1,1105 @@
+html,
+body,
+#app {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+  -webkit-box-flex: 1;
+      -ms-flex: auto;
+          flex: auto;
+  margin: 0;
+  padding: 0;
+  font-size: 16px !important;
+}
+
+#app {
+  font-family: "Raleway", sans-serif !important;
+  position: relative;
+  background-size: contain;
+}
+
+#app::before {
+  content: '';
+  position: absolute;
+  background-color: #d8d8d8;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  z-index: 0;
+}
+
+div {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+}
+
+body,
+header,
+footer,
+main {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.hooper {
+  outline: none;
+}
+
+.hooper .hooper-list {
+  overflow: hidden;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.hooper .hooper-list .hooper-track {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.hooper .hooper-list .hooper-track li {
+  width: 90%;
+}
+
+.hooper .hooper-list .hooper-track li a {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.hooper .hooper-list .hooper-track li a .first-row {
+  color: #000;
+  font-size: 2.5em;
+  font-weight: 600;
+  margin-bottom: 0.3em;
+}
+
+.hooper .hooper-list .hooper-track li a .second-row {
+  color: #BF8C0A;
+  font-size: 2.5em;
+  font-weight: 600;
+}
+
+.hooper .hooper-list .hooper-track li a.ucc .first-row {
+  color: #000;
+}
+
+.hooper .hooper-list .hooper-track li a.ucc .second-row {
+  color: #BF8C0A;
+}
+
+.hooper .hooper-list .hooper-track li a.mou .second-row {
+  color: #3f51b5;
+}
+
+.hooper .hooper-list .hooper-navigation {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  position: absolute;
+  z-index: 2;
+}
+
+.hooper .hooper-list .hooper-navigation button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+}
+
+.hooper .hooper-list .hooper-navigation button svg {
+  height: 48px;
+  width: 48px;
+  cursor: pointer;
+}
+
+.hooper .hooper-list .hooper-navigation button.is-disabled {
+  fill: gray;
+}
+
+.hooper .hooper-list .hooper-liveregion {
+  display: none;
+}
+
+article.military-article-preview {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 48%;
+  height: 300px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  border-radius: 4px;
+  -webkit-box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.6);
+          box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.6);
+  margin-bottom: 4%;
+  border: 1px solid rgba(25, 21, 8, 0.3);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+article.military-article-preview::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.05);
+  z-index: 1;
+}
+
+article.military-article-preview img {
+  width: 100%;
+  height: 100%;
+}
+
+article.military-article-preview .preview-content {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #2A2A2A;
+  padding: 5px 10px;
+}
+
+article.military-article-preview .preview-content .preview-title {
+  color: #fff;
+  font-size: 1.3em;
+  margin: 5px 0px 30px;
+  font-weight: 600;
+}
+
+article.military-article-preview .preview-content .preview-category {
+  position: absolute;
+  left: 10px;
+  bottom: 5px;
+  font-weight: 600;
+  color: #f4645f;
+}
+
+article.military-article-preview .preview-content .preview-date {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  color: #fff;
+}
+
+article.military-article-preview.small {
+  width: 100%;
+  height: 180px;
+  margin-bottom: 1.5em;
+}
+
+article.military-article-preview.small .preview-content {
+  font-size: 0.8em;
+}
+
+.military-nau {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 60%;
+  margin: 0 20%;
+  z-index: 1;
+  border-left: 1px solid rgba(25, 21, 8, 0.3);
+  border-right: 1px solid rgba(25, 21, 8, 0.3);
+}
+
+.military-nau .military-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.military-nau .military-header .top-layer {
+  height: 190px;
+  position: relative;
+}
+
+.military-nau .military-header .top-layer .layer-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("/img/bg.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.military-nau .military-header .top-layer .layer-bg::before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.military-nau .military-header .top-layer .military-logotypes {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-display: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  position: relative;
+  height: 100%;
+  padding: 0px 3%;
+}
+
+.military-nau .military-header .top-layer .military-logotypes img {
+  height: 120px;
+}
+
+.military-nau .military-header .top-layer .military-logotypes img:first-child {
+  margin-left: -10px;
+}
+
+.military-nau .military-header .bottom-layer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 3.5%;
+  height: 50px;
+  background-color: #191508;
+  border-top: 3px solid #8E8E8E;
+  margin-bottom: 0px;
+}
+
+.military-nau .military-header .bottom-layer.sf-menu li {
+  background-color: #191508;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.military-nau .military-header .bottom-layer.sf-menu li.current,
+.military-nau .military-header .bottom-layer.sf-menu li:hover {
+  background-color: #453f1d;
+}
+
+.military-nau .military-header .bottom-layer.sf-menu li a {
+  padding: 15px 2.2em 14px;
+  font-weight: 600;
+  font-size: 1.15em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: #fff;
+  border: none;
+}
+
+.military-nau .military-header .bottom-layer.sf-menu li a::after {
+  margin-top: 0px;
+}
+
+.military-nau .military-header .bottom-layer.sf-menu li a i {
+  margin-left: 5px;
+  margin-bottom: 2px;
+}
+
+.military-nau .military-main {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background-color: #fff;
+}
+
+.military-nau .military-main section {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  position: relative;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.military-nau .military-main section h2.aside-title {
+  width: 100%;
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  font-size: 2em;
+  font-weight: 700;
+  line-height: 92.2%;
+  color: #453f1d;
+  position: absolute;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.military-nau .military-main section div.main-row {
+  margin: 5em 0px 0em;
+  padding-bottom: 5em;
+  width: 100%;
+  position: relative;
+}
+
+.military-nau .military-main section div.main-row section {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.military-nau .military-main section.categories .main-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-bottom: 0em;
+}
+
+.military-nau .military-main section.categories .main-row .img-box {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 50%;
+  height: 344px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  border-top: 2px solid #191508;
+  border-bottom: 2px solid #191508;
+}
+
+.military-nau .military-main section.categories .main-row .img-box h3 {
+  position: absolute;
+  top: 45%;
+  margin: 0;
+  z-index: 3;
+  font-size: 2.5em;
+  font-weight: 700;
+  width: 100%;
+  text-align: center;
+  -webkit-transition: .3s all ease-in-out;
+  transition: .3s all ease-in-out;
+}
+
+.military-nau .military-main section.categories .main-row .img-box::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  -webkit-transition: .3s all ease-in-out;
+  transition: .3s all ease-in-out;
+}
+
+.military-nau .military-main section.categories .main-row .img-box:hover h3 {
+  color: transparent;
+}
+
+.military-nau .military-main section.categories .main-row .img-box:hover::after {
+  background-color: transparent;
+}
+
+.military-nau .military-main section.partners {
+  background-color: #ebebeb;
+}
+
+.military-nau .military-main section.partners h2 {
+  margin-top: 1.5em;
+}
+
+.military-nau .military-main section.partners .main-row {
+  margin-top: 8em;
+}
+
+.military-nau .military-main section.news h2 {
+  margin-top: 1.5em;
+  margin-bottom: 0.3em;
+}
+
+.military-nau .military-main section.news .choose-cats {
+  margin-top: 6em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.military-nau .military-main section.news .choose-cats .cat-item {
+  font-size: 1em;
+  font-weight: 600;
+  padding: 8px 15px;
+  cursor: pointer;
+  color: #fff;
+  background-color: #191508;
+  border-right: 1px solid rgba(25, 21, 8, 0.3);
+}
+
+.military-nau .military-main section.news .choose-cats .cat-item:first-child {
+  margin-right: 2px;
+  border-radius: 6px 0px 0px 6px;
+}
+
+.military-nau .military-main section.news .choose-cats .cat-item:last-child {
+  border-radius: 0px 6px 6px 0px;
+}
+
+.military-nau .military-main section.news .choose-cats .cat-item:hover,
+.military-nau .military-main section.news .choose-cats .cat-item .active {
+  background-color: #453f1d;
+}
+
+.military-nau .military-main section.news .articles {
+  margin-top: 3em;
+  padding: 0px 15%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: 100%;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.military-nau .military-main section.info {
+  background-color: #ebebeb;
+}
+
+.military-nau .military-main section.info h2 {
+  margin-top: 1.5em;
+}
+
+.military-nau .military-main section.info .main-row {
+  margin-top: 4em;
+  font-size: 1.875em;
+  font-weight: 700;
+  text-align: center;
+  line-height: 110%;
+  padding: 0em 15%;
+  padding-bottom: 0em;
+  margin-bottom: 2em;
+}
+
+.military-nau .military-main section.info .main-row p {
+  font-weight: 500;
+  font-size: 0.9em;
+  margin-top: 0;
+  margin-bottom: 40px;
+}
+
+.military-nau .military-footer {
+  width: 100%;
+  background-color: #191508;
+  height: 40px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+.military-nau .military-footer b {
+  margin: 0px 5px;
+}
+
+.military-nau .military-page {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background-color: #fff;
+}
+
+.military-nau .military-page section {
+  width: 100%;
+}
+
+.military-nau .military-page section.about .img-full-box {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 400px;
+  background-size: cover;
+  position: relative;
+  cursor: pointer;
+  border-bottom: 3px solid rgba(25, 21, 8, 0.6);
+}
+
+.military-nau .military-page section.about .img-full-box h2 {
+  position: relative;
+  z-index: 1;
+  font-size: 2.5em;
+  -webkit-transition: .3s all ease-in-out;
+  transition: .3s all ease-in-out;
+  color: transparent;
+}
+
+.military-nau .military-page section.about .img-full-box::after {
+  content: '';
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: transparent;
+  z-index: 0;
+  -webkit-transition: .3s all ease-in-out;
+  transition: .3s all ease-in-out;
+}
+
+.military-nau .military-page section.about .img-full-box:hover h2 {
+  color: #fff;
+}
+
+.military-nau .military-page section.about .img-full-box:hover::after {
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.military-nau .military-page section.content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar {
+  width: 28%;
+  border-right: 1px solid rgba(25, 21, 8, 0.3);
+  padding: 15px 15px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background-color: #F0F0F0;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar h2 {
+  margin: 10px 0em;
+  font-size: 1.4em;
+  font-weight: 600;
+  color: #453f1d;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar h2:first-child {
+  margin-top: 0px;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar .page-nav {
+  list-style: none;
+  margin: 0px;
+  padding-left: 20px;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar .page-nav li {
+  font-weight: 600;
+  padding: 2px;
+  color: #4d80aa;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar .page-nav li a {
+  padding: 5px;
+  color: #4d80aa;
+  font-size: 0.9em;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-transition: .3s all ease-in-out;
+  transition: .3s all ease-in-out;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar .page-nav li a:hover {
+  color: #423c1b;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar .military-last-news {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar .military-last-news .military-new-article {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-bottom: 30px;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar .military-last-news .military-new-article .article-img {
+  width: 100%;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar .military-last-news .military-new-article .article-img img {
+  width: 100%;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar .military-last-news .military-new-article .article-category {
+  font-weight: 500;
+  color: #3b8dbd;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar .military-last-news .military-new-article h3.article-title {
+  width: 100%;
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.2em;
+}
+
+.military-nau .military-page section.content aside.militari-sidebar .military-last-news .military-new-article .article-date {
+  color: #bbb;
+  font-weight: 600;
+}
+
+.military-nau .military-page section.content .military-info {
+  width: 72%;
+  padding: 15px;
+}
+
+.military-nau .military-page section.content .military-info h1 {
+  font-weight: 600;
+  margin: 0em 0em 15px;
+  line-height: 100%;
+  text-align: center;
+  color: #453f1d;
+  font-size: 2em;
+}
+
+.military-nau .military-page section.content .military-info h2 {
+  margin: 0px 0em 15px;
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #423c1b;
+}
+
+.military-nau .military-page section.content .military-info .military-news {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.military-nau .military-page section.content .military-info .military-news .military-new-article {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 100%;
+  height: 260px;
+  margin-bottom: 1em;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.military-nau .military-page section.content .military-info .military-news .military-new-article .article-img {
+  width: 40%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.military-nau .military-page section.content .military-info .military-news .military-new-article .article-img img {
+  height: 100%;
+  width: 100%;
+}
+
+.military-nau .military-page section.content .military-info .military-news .military-new-article .article-content {
+  width: 60%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  padding: 10px;
+  color: #000;
+  position: relative;
+}
+
+.military-nau .military-page section.content .military-info .military-news .military-new-article .article-content h3.article-title {
+  width: 100%;
+  margin: 0;
+  font-size: 1.3em;
+  margin-bottom: 15px;
+}
+
+.military-nau .military-page section.content .military-info .military-news .military-new-article .article-content .article-desc {
+  width: 100%;
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+.military-nau .military-page section.content .military-info .military-news .military-new-article .article-content .article-category {
+  position: absolute;
+  bottom: 10px;
+  font-weight: 500;
+  color: #3b8dbd;
+}
+
+.military-nau .military-page section.content .military-info .military-news .military-new-article .article-content .article-date {
+  position: absolute;
+  bottom: 10px;
+  right: 15px;
+  color: #bbb;
+  font-weight: 600;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-bottom: 35px;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-info .info-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-info .info-item i {
+  font-size: 2.7em;
+  margin-right: 10px;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-info .info-item i.fa-map-marker-alt {
+  color: #e92e21;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-info .info-item i.fa-phone-square-alt {
+  color: #03b003;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-info .info-item i.fa-fax {
+  color: #ff9800;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-info .info-item i.fa-envelope {
+  color: #03a9f4;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-info .info-item .item-label {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-info .info-item .item-label a.sub-item {
+  cursor: pointer;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-info .info-item .item-label a.sub-item:hover {
+  color: dodgerblue;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-info .info-item .item-label .sub-item {
+  color: #4d4747;
+  margin-bottom: 10px;
+  cursor: default;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-info .info-item .item-label .sub-item:last-child {
+  margin-bottom: 0;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  color: #4d4747;
+  margin-bottom: 35px;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-text strong {
+  font-weight: 700;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-text ul {
+  margin: 0px;
+  padding-left: 25px;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-text ul li {
+  margin-bottom: 5px;
+  font-size: 1.1em;
+}
+
+.military-nau .military-page section.content .military-info .military-contacts .contact-text ul li:last-child {
+  margin-bottom: 0px;
+}
+
+.military-nau .military-page section.content .military-info .militari-static {
+  font-size: 1.1em;
+  padding: 15px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.military-nau .military-page section.content .military-info .militari-static p {
+  margin: 0px 0px 1em;
+}
+
+.military-nau .military-page section.content .military-info .militari-static strong {
+  font-weight: 700;
+}
+
+.military-nau .military-page section.content .military-info .militari-static .entry {
+  line-height: 1.6;
+}
+
+.military-nau .military-page section.content .military-info .militari-static .entry table {
+  font-size: 14px;
+  margin-bottom: 1.5em;
+  width: 100%;
+  text-align: center;
+}
+
+.military-nau .military-page section.content .military-info .militari-static .entry table td {
+  border-bottom: 1px solid #f1f1f1;
+  text-align: center;
+  padding: 5px;
+  vertical-align: middle;
+}
+
+.military-nau .military-page section.content .military-info .militari-sections {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.military-nau .military-page section.content .military-info .militari-sections .section-item {
+  font-size: 1.1em;
+  margin-bottom: 2em;
+}
+
+.military-nau .military-page section.content .military-info .militari-sections .section-item .item-box {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 1.2em;
+}
+
+.military-nau .military-page section.content .military-info .militari-sections strong {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.military-nau .military-page section.content .military-info .militari-sections strong b {
+  font-weight: 500;
+  margin-left: 5px;
+  color: #4d4747;
+}
+
+.military-nau .military-page section.content .military-info .militari-sections .item-phone {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+
+.military-nau .military-page section.content .military-info .militari-sections .item-phone .fa-phone-alt {
+  color: #3c903f;
+  font-size: 1.3em;
+}
+
+.military-nau .military-page section.content .military-info .militari-sections .item-phone a {
+  color: #4d4747;
+  margin-left: 10px;
+}
+
+.military-nau .military-page section.content .military-info .militari-sections .item-phone a:hover {
+  color: dodgerblue;
+}
+

@@ -1,0 +1,593 @@
+// Libraries
+@import "variables";
+@import "clear";
+@import "carusel";
+@import "article";
+
+.military-nau{
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  margin: 0 20%;
+  z-index: 1;
+  border-left: 1px solid rgba(25, 21, 8, 0.3);
+  border-right: 1px solid rgba(25, 21, 8, 0.3);
+  .military-header{
+    display: flex;
+    flex-direction: column;
+    .top-layer{
+      height: 190px;
+      position: relative;
+      .layer-bg{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image: url('/img/bg.jpg');
+        background-size: cover;
+        background-position: center;
+        &::before{
+          content: '';
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          background-color: $shadow;
+        }
+      }
+      .military-logotypes{
+        display: flex;
+        flex-display: row;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        height: 100%;
+        padding: 0px 3%;
+        img{
+          height: 120px;
+          &:first-child{
+            margin-left: -10px;
+          }
+        }
+      }
+    }
+    .bottom-layer{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 0 3.5%;
+      height: 50px;
+      background-color: $swampy;
+      border-top: 3px solid #8E8E8E;
+      margin-bottom: 0px;
+      &.sf-menu{
+        li{
+          background-color: $swampy;
+          box-sizing: border-box;
+          &.current,
+          &:hover{
+            background-color: $swampy-hover;
+          }
+          a{
+            padding: 15px 2.2em 14px;
+            font-weight: 600;
+            font-size: 1.15em;
+            display: flex;
+            align-items: center;
+            color: #fff;
+            border: none;
+            &::after{
+              margin-top: 0px;
+            }
+            i{
+              margin-left: 5px;
+              margin-bottom: 2px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .military-main{
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    section{
+      display: flex;
+      flex-direction: column;
+      //justify-content: center;
+      align-items: center;
+      width: 100%;
+      position: relative;
+      box-sizing: border-box;
+      h2.aside-title{
+        width: 100%;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        font-size: 2em;
+        font-weight: 700;
+        line-height: 92.2%;
+        color: $swampy-hover;
+        position: absolute;
+        box-sizing: border-box;
+      }
+      div.main-row{
+        margin: 5em 0px 0em;
+        padding-bottom: 5em;
+        width: 100%;
+        position: relative;
+        section{
+          display: flex;
+          flex-direction: row;
+        }
+      }
+
+      &.categories{
+        .main-row{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-bottom: 0em;
+          .img-box{
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            width: 50%;
+            height: 344px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            border-top: 2px solid #191508;
+            border-bottom: 2px solid #191508;
+            h3{
+              position: absolute;
+              top: 45%;
+              margin: 0;
+              z-index: 3;
+              font-size: 2.5em;
+              font-weight: 700;
+              width: 100%;
+              text-align: center;
+              transition: .3s all ease-in-out;
+            }
+            &::after{
+              content: '';
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              top: 0;
+              left: 0;
+              background-color: $shadow;
+              transition: .3s all ease-in-out;
+            }
+            &:hover{
+              h3{
+                color: transparent;
+              }
+              &::after{
+                background-color: transparent;
+              }
+            }
+          }
+        }
+      }
+      &.partners{
+        background-color: #ebebeb;
+        h2{
+          margin-top: 1.5em;
+        }
+        .main-row{
+          margin-top: 8em;
+        }
+      }
+      &.news{
+        h2{
+          margin-top: 1.5em;
+          margin-bottom: 0.3em;
+        }
+        .choose-cats{
+          margin-top: 6em;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .cat-item{
+            font-size: 1em;
+            font-weight: 600;
+            padding: 8px 15px;
+            cursor: pointer;
+            color: #fff;
+            background-color: #191508;
+            border-right: 1px solid rgba(25, 21, 8, 0.3);
+            &:first-child{
+              margin-right: 2px;
+              border-radius: 6px 0px 0px 6px;
+            }
+            &:last-child{
+              border-radius: 0px 6px 6px 0px;
+            }
+            &:hover, .active{
+              background-color: $swampy-hover;
+            }
+          }
+        }
+        .articles{
+          margin-top: 3em;
+          padding: 0px 15%;
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          flex-wrap: wrap;
+          justify-content: space-between;
+        }
+      }
+      &.info{
+        background-color: #ebebeb;
+        h2{
+          margin-top: 1.5em;
+        }
+        .main-row{
+          margin-top: 4em;
+          font-size: 1.875em;
+          font-weight: 700;
+          text-align: center;
+          line-height: 110%;
+          padding: 0em 15%;
+          padding-bottom: 0em;
+          margin-bottom: 2em;
+          p{
+            font-weight: 500;
+            font-size: 0.9em;
+            margin-top: 0;
+            margin-bottom: 40px;
+          }
+        }
+      }
+    }
+  }
+  .military-footer{
+    width: 100%;
+    background-color: $swampy;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: 500;
+    b{
+      margin: 0px 5px;
+    }
+  }
+
+  .military-page{
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    section{
+      width: 100%;
+      &.about{
+        .img-full-box{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 400px;
+          background-size: cover;
+          position: relative;
+          cursor: pointer;
+          border-bottom: 3px solid rgba(25, 21, 8, 0.6);
+          h2{
+            position: relative;
+            z-index: 1;
+            font-size: 2.5em;
+            transition: .3s all ease-in-out;
+            color: transparent;
+          }
+          &::after{
+            content: '';
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-color: transparent;
+            z-index: 0;
+            transition: .3s all ease-in-out;
+          }
+          &:hover{
+            h2{
+              color: #fff;
+            }
+            &::after{
+              background-color: $shadow;
+            }
+          }
+        }
+      }
+      &.content{
+        display: flex;
+        justify-content: space-between;
+        aside.militari-sidebar{
+          width: 28%;
+          border-right: 1px solid rgba(25, 21, 8, 0.3);
+          padding: 15px 15px;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          background-color: #F0F0F0;
+          h2{
+            margin: 10px 0em;
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #453f1d;
+            &:first-child{
+              margin-top: 0px;
+            }
+          }
+          .page-nav{
+            list-style: none;
+            margin: 0px;
+            padding-left: 20px;
+            li{
+              font-weight: 600;
+              padding: 2px;
+              color: #4d80aa;
+              a{
+                padding: 5px;
+                color: #4d80aa;
+                font-size: 0.9em;
+                display: inline-flex;
+                transition: .3s all ease-in-out;
+                &:hover{
+                  color: #423c1b;
+                }
+              }
+            }
+          }
+          .military-last-news{
+            display: flex;
+            flex-direction: column;
+            .military-new-article{
+              display: flex;
+              flex-direction: column;
+              margin-bottom: 30px;
+              .article-img{
+                width: 100%;
+                img{
+                  width: 100%;
+                }
+              }
+              .article-category{
+                font-weight: 500;
+                color: #3b8dbd;
+              }
+              h3.article-title{
+                width: 100%;
+                margin: 0;
+                font-weight: 600;
+                font-size: 1.2em;
+              }
+              .article-date{
+                color: #bbb;
+                font-weight: 600;
+              }
+            }
+          }
+        }
+        .military-info{
+          width: 72%;
+          padding: 15px;
+          h1{
+            font-weight: 600;
+            margin: 0em 0em 15px;
+            line-height: 100%;
+            text-align: center;
+            color: #453f1d;
+            font-size: 2em;
+          }
+          h2{
+            margin: 0px 0em 15px;
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #423c1b;
+          }
+          .military-news{
+            display: flex;
+            flex-direction: column;
+            .military-new-article{
+              display: flex;
+              justify-content: space-between;
+              width: 100%;
+              height: 260px;
+              margin-bottom: 1em;
+              //border: 2px solid #000;
+              box-sizing: border-box;
+              .article-img{
+                width: 40%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 10px;
+                overflow: hidden;
+                img{
+                  height: 100%;
+                  width: 100%;
+                }
+              }
+              .article-content{
+                width: 60%;
+                display: flex;
+                flex-direction: column;
+                padding: 10px;
+                color: #000;
+                position: relative;
+                h3.article-title{
+                  width: 100%;
+                  margin: 0;
+                  font-size: 1.3em;
+                  margin-bottom: 15px;
+                }
+                .article-desc{
+                  width: 100%;
+                  font-size: 1.1em;
+                  font-weight: 500;
+                }
+                .article-category{
+                  position: absolute;
+                  bottom: 10px;
+                  font-weight: 500;
+                  color: #3b8dbd;
+                }
+                .article-date{
+                  position: absolute;
+                  bottom: 10px;
+                  right: 15px;
+                  color: #bbb;
+                  font-weight: 600;
+                }
+              }
+            }
+          }
+          .military-contacts{
+            display: flex;
+            flex-direction: column;
+            .contact-info{
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 35px;
+              .info-item{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                i{
+                  font-size: 2.7em;
+                  margin-right: 10px;
+                  &.fa-map-marker-alt{
+                    color: #e92e21;
+                  }
+                  &.fa-phone-square-alt{
+                    color: #03b003;
+                  }
+                  &.fa-fax{
+                    color: #ff9800;
+                  }
+                  &.fa-envelope{
+                    color: #03a9f4;
+                  }
+                }
+                .item-label{
+                  display: flex;
+                  flex-direction: column;
+                  a.sub-item{
+                    cursor: pointer;
+                    &:hover{
+                      color: dodgerblue;
+                    }
+                  }
+                  .sub-item{
+                    color: #4d4747;
+                    margin-bottom: 10px;
+                    cursor: default;
+                    &:last-child{
+                      margin-bottom: 0;
+                    }
+                  }
+                }
+              }
+            }
+            .contact-text{
+              display: flex;
+              flex-direction: column;
+              color: #4d4747;
+              margin-bottom: 35px;
+              strong{
+                font-weight: 700;
+                margin-bottom: 10px;
+                font-size: 1.2em;
+              }
+              ul{
+                margin: 0px;
+                padding-left: 25px;
+                li{
+                  margin-bottom: 5px;
+                  font-size: 1.1em;
+                  &:last-child{
+                    margin-bottom: 0px;
+                  }
+                }
+              }
+            }
+          }
+          .militari-static{
+            font-size: 1.1em;
+            padding: 15px;
+            box-sizing: border-box;
+            p{
+              margin: 0px 0px 1em;
+            }
+            strong{
+              font-weight: 700;
+            }
+            .entry{
+              line-height: 1.6;
+              table{
+                font-size: 14px;
+                margin-bottom: 1.5em;
+                width: 100%;
+                text-align: center;
+                td{
+                  border-bottom: 1px solid #f1f1f1;
+                  text-align: center;
+                  padding: 5px;
+                  vertical-align: middle;
+                }
+              }
+            }
+          }
+          .militari-sections{
+            display: flex;
+            flex-direction: column;
+            .section-item{
+              font-size: 1.1em;
+              margin-bottom: 2em;
+              .item-box{
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                font-size: 1.2em;
+              }
+            }
+            strong{
+              display: flex;
+              font-weight: 600;
+              margin-bottom: 8px;
+              b{
+                font-weight: 500;
+                margin-left: 5px;
+                color: #4d4747;
+              }
+            }
+            .item-phone{
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              .fa-phone-alt{
+                color: #3c903f;
+                font-size: 1.3em;
+              }
+              a{
+                color: #4d4747;
+                margin-left: 10px;
+                &:hover{
+                  color: dodgerblue;
+                }
+              }
+
+            }
+          }
+        }
+      }
+    }
+  }
+}
