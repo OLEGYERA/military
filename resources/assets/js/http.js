@@ -1,5 +1,5 @@
 import axios from 'axios'
 
 export const HTTP = axios.create({
-    baseURL: `http://localhost:3000/mc-api/p1/`
+    baseURL: `http://127.0.0.1:8000/mc-api/p1/`
 })

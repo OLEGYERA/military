@@ -11,7 +11,7 @@
                     <th>Видимість</th>
                     <th class="th-date">Дата створення</th>
                     <th class="th-date">Дата Оновлення</th>
-
+                    <th class="th-date">Управление</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,6 +24,7 @@
                         <td><a href="{{route('edit_article', ['alias' => $article->alias])}}">{{$article->show}}</a></td>
                         <td><a href="{{route('edit_article', ['alias' => $article->alias])}}">{{$article->created_at}}</a></td>
                         <td><a href="{{route('edit_article', ['alias' => $article->alias])}}">{{$article->updated_at}}</a></td>
+                        <td><a class="btn-delete" href="{{route('delete_article', ['alias' => $article->alias])}}">Удалить</a></td>
                     </tr>
                 @endforeach
             </tbody>

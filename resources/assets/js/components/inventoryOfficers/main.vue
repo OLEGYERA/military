@@ -1,135 +1,39 @@
 <template>
     <main class="military-page">
         <section class="about">
-            <a class="img-full-box" style="background-image: url('img/officer-first.jpg');">
+            <a class="img-full-box" style="background-image: url('../../img/officer-first.jpg');">
                 <h2>Докладніше</h2>
             </a>
         </section>
         <section class="content">
             <aside class="militari-sidebar">
-                <h2>Навігація офіцерів кадру</h2>
-                <ul class="page-nav">
-                    <li>- <a href="#">Абітурієнту</a></li>
-                    <li>- <a href="#">Спеціальності підготовки</a></li>
-                    <li>- <a href="#">Науково-дослідна лабораторія</a></li>
-                </ul>
-                <h2>Останні новини</h2>
+                <h2>Останні Сторінки</h2>
                 <div class="military-last-news">
-                    <article class="military-article-preview small revealator-slideright revealator-duration10 revealator-once" style="background-image: url('/img/article-2.jpg');">
+                    <article class="military-article-preview small revealator-slideright revealator-duration10 revealator-once" v-for="item in last_pages">
+                        <div class="img-box"
+                             :style="{ backgroundImage: 'url(../../storage/images/' + item.image  + ')' }"
+                             @click="jump('reverse_spec', item.alias)"
+                        ></div>
                         <div class="preview-content">
-                            <h3 class="preview-title">День відкритих дверей</h3>
-                            <div class="preview-category">КАТЕГОРІЯ</div>
-                            <div class="preview-date">27 ЖОВ, 2019</div>
-                        </div>
-                    </article>
-                    <article class="military-article-preview small revealator-slideright revealator-duration10 revealator-once" style="background-image: url('/img/article-2.jpg');">
-                        <div class="preview-content">
-                            <h3 class="preview-title">День відкритих дверей</h3>
-                            <div class="preview-category">КАТЕГОРІЯ</div>
-                            <div class="preview-date">27 ЖОВ, 2019</div>
-                        </div>
-                    </article>
-                    <article class="military-article-preview small revealator-slideright revealator-duration10 revealator-once" style="background-image: url('/img/article-2.jpg');">
-                        <div class="preview-content">
-                            <h3 class="preview-title">День відкритих дверей</h3>
-                            <div class="preview-category">КАТЕГОРІЯ</div>
-                            <div class="preview-date">27 ЖОВ, 2019</div>
+                            <h3 class="preview-title">{{item.title}}</h3>
                         </div>
                     </article>
                 </div>
             </aside>
             <div class="military-info">
                 <h1>
-                    Новини офіцерів кадру
+                    Новини офіцерів Кадру
                 </h1>
                 <div class="military-news">
-                    <a href="#">
-                        <article class="military-new-article">
-                            <div class="article-img">
-                                <img src="/img/article.jpg" alt="">
-                            </div>
-                            <div class="article-content">
-                                <h3 class="article-title">День відкритих дверей</h3>
-                                <div class="article-desc">
-                                    26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...
-                                </div>
-                                <div class="article-category">
-                                    КАТЕГОРІЯ
-                                </div>
-                                <div class="article-date">
-                                    27 ЖОВ, 2019
-                                </div>
-                            </div>
-                        </article>
-                        <article class="military-new-article">
-                            <div class="article-img">
-                                <img src="/img/article.jpg" alt="">
-                            </div>
-                            <div class="article-content">
-                                <h3 class="article-title">День відкритих дверей</h3>
-                                <div class="article-desc">
-                                    26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...
-                                </div>
-                                <div class="article-category">
-                                    КАТЕГОРІЯ
-                                </div>
-                                <div class="article-date">
-                                    27 ЖОВ, 2019
-                                </div>
-                            </div>
-                        </article>
-                        <article class="military-new-article">
-                            <div class="article-img">
-                                <img src="/img/article.jpg" alt="">
-                            </div>
-                            <div class="article-content">
-                                <h3 class="article-title">День відкритих дверей</h3>
-                                <div class="article-desc">
-                                    26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...
-                                </div>
-                                <div class="article-category">
-                                    КАТЕГОРІЯ
-                                </div>
-                                <div class="article-date">
-                                    27 ЖОВ, 2019
-                                </div>
-                            </div>
-                        </article>
-                        <article class="military-new-article">
-                            <div class="article-img">
-                                <img src="/img/article.jpg" alt="">
-                            </div>
-                            <div class="article-content">
-                                <h3 class="article-title">День відкритих дверей</h3>
-                                <div class="article-desc">
-                                    26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...
-                                </div>
-                                <div class="article-category">
-                                    КАТЕГОРІЯ
-                                </div>
-                                <div class="article-date">
-                                    27 ЖОВ, 2019
-                                </div>
-                            </div>
-                        </article>
-                        <article class="military-new-article">
-                            <div class="article-img">
-                                <img src="/img/article.jpg" alt="">
-                            </div>
-                            <div class="article-content">
-                                <h3 class="article-title">День відкритих дверей</h3>
-                                <div class="article-desc">
-                                    26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...
-                                </div>
-                                <div class="article-category">
-                                    КАТЕГОРІЯ
-                                </div>
-                                <div class="article-date">
-                                    27 ЖОВ, 2019
-                                </div>
-                            </div>
-                        </article>
-                    </a>
+                    <article class="military-new-article" v-for="item in news">
+                        <div class="img-box"
+                             :style="{ backgroundImage: 'url(../../storage/images/' + item.image  + ')' }"
+                             @click="jump('reverse_spec', item.alias)"
+                        ></div>
+                        <div class="article-content" @click="jump('reverse_spec', item.alias)">
+                            <h3 class="article-title">{{item.title}}</h3>
+                        </div>
+                    </article>
                 </div>
             </div>
         </section>
@@ -137,7 +41,42 @@
 </template>
 
 <script>
-    export default {
+    import {HTTP} from '../../http.js'
 
+    export default {
+        mounted(){
+            this.getLastPages();
+            this.getNews();
+        },
+        data: function(){
+            return{
+                last_pages: null,
+                news: null,
+            }
+        },
+        methods: {
+            getLastPages(){
+                HTTP.get(`last-pages`)
+                    .then(response => {
+                        this.last_pages = response.data.data;
+                        console.log(this.last_pages);
+                        document.title = 'Головна сторінка Офіцерів кадру'
+                    }).catch(error => {
+                    console.log(error);
+                })
+            },
+            getNews(){
+                HTTP.get(`inventory-news`)
+                    .then(response => {
+                        this.news = response.data.data;
+                        console.log(this.news);
+                    }).catch(error => {
+                    console.log(error);
+                })
+            },
+            jump(name, alias){
+                this.$router.push({ name: name, params: { alias } })
+            }
+        },
     }
 </script>

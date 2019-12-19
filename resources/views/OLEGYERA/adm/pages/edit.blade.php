@@ -1,9 +1,9 @@
 <div class="content-field">
-    <form action="{{route('edit_article', ['alias' => $article->alias])}}" method="POST" class="article-form" enctype="multipart/form-data">
+    <form action="{{route('global_edit_page', ['alias' => $page->alias])}}" method="POST" class="article-form" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="main-column">
             <div class="titles-row">
-                <h1 class="page-title">Редагувати новину</h1>
+                <h1 class="page-title">Редагувати сторінку</h1>
                 @if ($errors->has('title'))
                     <span class="help-block">
                         <strong>{{ $errors->first('title') }}</strong>
@@ -14,7 +14,7 @@
                         <strong>{{ $errors->first('alias') }}</strong>
                     </span>
                 @endif
-                <input type="text" name="title" placeholder="Введіть заголовок" required class="ru-title" value="{{old('title') ?? $article->title}}">
+                <input type="text" name="title" placeholder="Введіть заголовок" required class="ru-title" value="{{old('title') ?? $page->title}}">
                 <input type="hidden" name="alias" id="alias" required class="eng-alias" value="{{old('alias')}}">
 
             </div>
@@ -25,36 +25,57 @@
                     </span>
                 @endif
                 <textarea name="text" id="text">
-                        {{old('text') ?? $article->text}}
+                        {{old('text') ?? $page->text}}
                 </textarea>
             </div>
         </div>
         <div class="aside-column">
             <div class="article-menu">
                 <h2 class="page-title">Налаштування</h2>
-                <div class="menu-row">
-                    @if(old('fix'))
-                        <input type="checkbox" name="fix" id="fix" class="adm-checkbox" {{ old('fix') ? 'checked' : ''}}>
-                    @else
-                        @if($article->fix == 1)
-                            <input type="checkbox" name="fix" id="fix" class="adm-checkbox" checked>
-                        @else
-                            <input type="checkbox" name="fix" id="fix" class="adm-checkbox">
-                        @endif
-                    @endif
-                    <label for="fix">Закріпити новину</label>
-                </div>
+
                 <div class="menu-row">
                     @if(old('show'))
                         <input type="checkbox" name="show" id="show" class="adm-checkbox" {{ old('show') ? 'checked' : ''}}>
                     @else
-                        @if($article->show == 1)
+                        @if($page->show == 1)
                             <input type="checkbox" name="show" id="show" class="adm-checkbox" checked>
                         @else
                             <input type="checkbox" name="show" id="show" class="adm-checkbox">
                         @endif
                     @endif
                     <label for="show">Видимість</label>
+                </div>
+                <div class="menu-row" style="display: flex; flex-direction: column; align-items: flex-start">
+                    <label for="menu" style="margin-left: 0px; margin-bottom: 5px">Меню</label>
+                    <select name="menu" id="menu" style="width: 100%;">
+                        @foreach($menus as $menu)
+                            @if($menu['parent']->drop == 0)
+                                <option value="{{$menu['parent']->id}}" disabled >{{$menu['parent']->name}}</option>
+                            @else
+                                <option value="{{$menu['parent']->id}}"
+                                        @if(!empty(old('menu')))
+                                            @if($menu['parent']->id == old('menu'))
+                                                selected
+                                            @endif
+                                        @else
+                                            @if($menu['parent']->id == $page->menu)
+                                                selected
+                                            @endif
+                                        @endif
+                                        >
+                                    {{$menu['parent']->name}}</option>
+                            @endif
+                            <?php
+                                if(!empty(old('menu')))  {
+                                    $od = old('menu');
+                                }else{
+                                    $od = $page->menu;
+                                }
+                            ?>
+                            {{$od}}
+                            @include(env('VIEW_PATH').'adm.pages.menu', ['menus' => $menu['child'], 'old_menu' => $od, 'step' => 1])
+                        @endforeach
+                    </select>
                 </div>
                 <div class="menu-row btn-row">
                     <a class="btn disabled">Переглянути</a>
@@ -63,7 +84,7 @@
             </div>
             <div class="article-img">
                 <h2 class="page-title">Загрузити зображення</h2>
-                <img src="{{asset('storage/images/' . $article->image)}}" alt="">
+                <img src="{{asset('storage/images/' . $page->image)}}" alt="">
                 <input type="file" name="image" id="image">
                 @if ($errors->has('image'))
                     <span class="help-block">
@@ -71,36 +92,6 @@
                     </span>
                 @endif
                 <label for="image">Виберіть зображення </label>
-            </div>
-            <div class="article-categories">
-                <h2 class="page-title">Виберіть категорію</h2>
-                @if(old('category'))
-                    <div class="menu-row">
-                        <input type="radio" name="category" value="0" id="all_cat" @if(old('category') == 0) checked @elseif(old('category') !=0 && old('category') != 1 && old('category') != 2) checked @endif>
-                        <label for="all_cat">Всі групи</label>
-                    </div>
-                    <div class="menu-row">
-                        <input type="radio" name="category" value="1" id="reserve_cat" @if(old('category') == 1) checked @endif>
-                        <label for="reserve_cat">Офіцери запасу</label>
-                    </div>
-                    <div class="menu-row">
-                        <input type="radio" name="category" value="2" id="main_cat" @if(old('category') == 2) checked @endif>
-                        <label for="main_cat">Офіцери кадру</label>
-                    </div>
-                @else
-                    <div class="menu-row">
-                        <input type="radio" name="category" value="0" id="all_cat" @if($article->category == 0) checked @endif>
-                        <label for="all_cat">Всі групи</label>
-                    </div>
-                    <div class="menu-row">
-                        <input type="radio" name="category" value="1" id="reserve_cat" @if($article->category == 1) checked @endif>
-                        <label for="reserve_cat">Офіцери запасу</label>
-                    </div>
-                    <div class="menu-row">
-                        <input type="radio" name="category" value="2" id="main_cat" @if($article->category == 2) checked @endif>
-                        <label for="main_cat">Офіцери кадру</label>
-                    </div>
-                @endif
             </div>
         </div>
     </form>

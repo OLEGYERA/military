@@ -15,4 +15,4 @@ mix.browserSync('http://127.0.0.1:8000');
 
 mix.js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css');
-// mix.sass('resources/assets/sass/admin.scss', 'public/css');
+mix.sass('resources/assets/sass/admin.scss', 'public/css');

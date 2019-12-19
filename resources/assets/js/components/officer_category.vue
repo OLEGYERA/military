@@ -1,60 +1,54 @@
 <template>
     <main class="military-page">
-        <section class="about">
-            <a class="img-full-box" style="background-image: url('../../img/officer-second.jpg');">
-                <h2>Докладніше</h2>
-            </a>
-        </section>
         <section class="content">
             <aside class="militari-sidebar">
                 <h2>Останні Сторінки</h2>
                 <div class="military-last-news">
                     <article class="military-article-preview small revealator-slideright revealator-duration10 revealator-once" v-for="item in last_pages">
-                        <div class="img-box"
-                             :style="{ backgroundImage: 'url(../../storage/images/' + item.image  + ')' }"
-                             @click="jump('reverse_common', item.alias)"
+                        <div class="img-box"  @click="jump('reverse_common', item.alias)"
+                             :style="{ backgroundImage: 'url(/storage/images/' + item.image  + ')' }"
                         ></div>
-                        <div class="preview-content" @click="jump('reverse_common', item.alias)">
+                        <div class="preview-content"  @click="jump('reverse_common', item.alias)">
                             <h3 class="preview-title">{{item.title}}</h3>
                         </div>
                     </article>
                 </div>
             </aside>
-            <div class="military-info">
-                <h1>
-                    Новини офіцерів Запасу
-                </h1>
-                <div class="military-news">
-                    <article class="military-new-article" v-for="item in news">
-                        <div class="img-box"
-                             :style="{ backgroundImage: 'url(../../storage/images/' + item.image  + ')' }"
-                             @click="jump('reverse_spec', item.alias)"
-                        ></div>
-                        <div class="article-content" @click="jump('reverse_spec', item.alias)">
-                            <h3 class="article-title">{{item.title}}</h3>
-                        </div>
-                    </article>
-                </div>
+            <div class="military-info" v-if="new_item">
+                <h1 v-html="new_item.title"></h1>
+                <div class="military-page-content" v-html="new_item.text"></div>
             </div>
         </section>
     </main>
 </template>
 
 <script>
-    import {HTTP} from '../../http.js'
+    import {HTTP} from '../http.js'
 
     export default {
         mounted(){
             this.getLastPages();
-            this.getNews();
+            this.getNew(this.$route.params.alias);
+            // this.getPage(this.$route.params.alias);
         },
         data: function(){
             return{
+                // page: null,
                 last_pages: null,
-                news: null,
+                new_item: null,
             }
         },
         methods: {
+            // getPage(alias){
+            //     HTTP.get(`page` + '/' + alias)
+            //         .then(response => {
+            //             this.page = response.data;
+            //             document.title = this.page.title
+            //         }).catch(error => {
+            //         console.log(error);
+            //     })
+            // },
+
             getLastPages(){
                 HTTP.get(`last-pages`)
                     .then(response => {
@@ -65,11 +59,11 @@
                     console.log(error);
                 })
             },
-            getNews(){
-                HTTP.get(`reserve-news`)
+            getNew(alias){
+                HTTP.get(`inventory-new` + '/' + alias)
                     .then(response => {
-                        this.news = response.data.data;
-                        console.log(this.news);
+                        this.new_item = response.data;
+                        console.log(this.new_item);
                     }).catch(error => {
                     console.log(error);
                 })

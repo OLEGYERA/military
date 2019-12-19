@@ -6,7 +6,7 @@ use App\Http\Requests\ArticleRequest as Request;
 use App\Http\Controllers\Admin\BaseController;
 class ArticleController extends BaseController
 {
-    protected $header = [['title' => 'Админ Панель', 'link' => 'global_dashboard'], ['title' => 'Новости', 'link' => 'global_dashboard']];
+    protected $header = [['title' => 'Адмін Панель', 'link' => 'global_dashboard'], ['title' => 'Новини', 'link' => 'global_dashboard']];
     protected $aside = 'Global';
 
     public function showArticles(){
@@ -42,7 +42,8 @@ class ArticleController extends BaseController
             }else{
                 $data['category'] = 0;
             }
-            Article::create($data);
+            $article_new = Article::create($data);
+            return redirect()->route('edit_article', $article_new->alias);
         }
         $this->content = view(env('VIEW_PATH') . 'adm.articles.create')->render();
         return $this->renderPage();
@@ -59,6 +60,9 @@ class ArticleController extends BaseController
         if ($request->isMethod('post')) {
             $data = [];
             if(isset($request->image)){
+                if($article->image != null){
+                    unlink(storage_path('app/public/images/' . $article->image));
+                }
                 $article->image = $request->alias . '_' . $request->image->getClientOriginalName();
                 $request->image->move(storage_path('app/public/images/'), $article->image);
             }
@@ -85,8 +89,18 @@ class ArticleController extends BaseController
 //            dd($article);
             $article->category = $request->category;
             $article->save();
+            return redirect()->route('edit_article', ['alias' => $article->alias]);
         }
         $this->content = view(env('VIEW_PATH') . 'adm.articles.edit')->with(['article' => $article])->render();
         return $this->renderPage();
+    }
+
+    public function deleteArticle($alias){
+        $article = Article::where('alias', $alias)->first();
+        if(!empty($article->image)){
+            unlink(storage_path('app/public/images/' . $article->image));
+        }
+        $article->delete();
+        return redirect()->route('global_articles');
     }
 }

@@ -60,18 +60,127 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 13);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var bind = __webpack_require__(6);
-var isBuffer = __webpack_require__(18);
+var bind = __webpack_require__(7);
+var isBuffer = __webpack_require__(19);
 
 /*global toString:true*/
 
@@ -374,122 +483,13 @@ module.exports = {
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 if (false) {
   module.exports = require('./vue.common.prod.js')
 } else {
-  module.exports = __webpack_require__(35)
+  module.exports = __webpack_require__(36)
 }
 
 
@@ -524,11 +524,17 @@ module.exports = g;
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__(18);
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(20);
+var utils = __webpack_require__(1);
+var normalizeHeaderName = __webpack_require__(21);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -544,10 +550,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(8);
+    adapter = __webpack_require__(9);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(8);
+    adapter = __webpack_require__(9);
   }
   return adapter;
 }
@@ -618,16 +624,24 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(17);
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
 
 /***/ }),
 /* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HTTP; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+
+
+var HTTP = __WEBPACK_IMPORTED_MODULE_0_axios___default.a.create({
+    baseURL: 'http://127.0.0.1:8000/mc-api/p1/'
+});
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -645,7 +659,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -835,19 +849,19 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
-var settle = __webpack_require__(21);
-var buildURL = __webpack_require__(23);
-var parseHeaders = __webpack_require__(24);
-var isURLSameOrigin = __webpack_require__(25);
-var createError = __webpack_require__(9);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(26);
+var utils = __webpack_require__(1);
+var settle = __webpack_require__(22);
+var buildURL = __webpack_require__(24);
+var parseHeaders = __webpack_require__(25);
+var isURLSameOrigin = __webpack_require__(26);
+var createError = __webpack_require__(10);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(27);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -944,7 +958,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(27);
+      var cookies = __webpack_require__(28);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -1022,13 +1036,13 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(22);
+var enhanceError = __webpack_require__(23);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -1047,7 +1061,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1059,7 +1073,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1085,24 +1099,25 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(13);
-module.exports = __webpack_require__(75);
+__webpack_require__(14);
+__webpack_require__(81);
+module.exports = __webpack_require__(82);
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router_js__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(72);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuebar__ = __webpack_require__(74);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router_js__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(78);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuebar__ = __webpack_require__(80);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuebar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuebar__);
-__webpack_require__(14);
+__webpack_require__(15);
 
 window.Vue = __webpack_require__(2);
 
@@ -1119,11 +1134,11 @@ var app = new Vue({
 });
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-window._ = __webpack_require__(15);
+window._ = __webpack_require__(16);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -1143,7 +1158,7 @@ window._ = __webpack_require__(15);
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(5);
+window.axios = __webpack_require__(4);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -1179,7 +1194,7 @@ if (token) {
 // });
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -18296,10 +18311,10 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(16)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(17)(module)))
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -18327,16 +18342,16 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
-var bind = __webpack_require__(6);
-var Axios = __webpack_require__(19);
-var defaults = __webpack_require__(4);
+var utils = __webpack_require__(1);
+var bind = __webpack_require__(7);
+var Axios = __webpack_require__(20);
+var defaults = __webpack_require__(5);
 
 /**
  * Create an instance of Axios
@@ -18369,15 +18384,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(11);
-axios.CancelToken = __webpack_require__(33);
-axios.isCancel = __webpack_require__(10);
+axios.Cancel = __webpack_require__(12);
+axios.CancelToken = __webpack_require__(34);
+axios.isCancel = __webpack_require__(11);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(34);
+axios.spread = __webpack_require__(35);
 
 module.exports = axios;
 
@@ -18386,7 +18401,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 /*!
@@ -18413,16 +18428,16 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(4);
-var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(28);
-var dispatchRequest = __webpack_require__(29);
+var defaults = __webpack_require__(5);
+var utils = __webpack_require__(1);
+var InterceptorManager = __webpack_require__(29);
+var dispatchRequest = __webpack_require__(30);
 
 /**
  * Create a new instance of Axios
@@ -18499,13 +18514,13 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 module.exports = function normalizeHeaderName(headers, normalizedName) {
   utils.forEach(headers, function processHeader(value, name) {
@@ -18518,13 +18533,13 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createError = __webpack_require__(9);
+var createError = __webpack_require__(10);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -18551,7 +18566,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18579,13 +18594,13 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 function encode(val) {
   return encodeURIComponent(val).
@@ -18654,13 +18669,13 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 // Headers whose duplicates are ignored by node
 // c.f. https://nodejs.org/api/http.html#http_message_headers
@@ -18714,13 +18729,13 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -18789,7 +18804,7 @@ module.exports = (
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18832,13 +18847,13 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -18892,13 +18907,13 @@ module.exports = (
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 function InterceptorManager() {
   this.handlers = [];
@@ -18951,18 +18966,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
-var transformData = __webpack_require__(30);
-var isCancel = __webpack_require__(10);
-var defaults = __webpack_require__(4);
-var isAbsoluteURL = __webpack_require__(31);
-var combineURLs = __webpack_require__(32);
+var utils = __webpack_require__(1);
+var transformData = __webpack_require__(31);
+var isCancel = __webpack_require__(11);
+var defaults = __webpack_require__(5);
+var isAbsoluteURL = __webpack_require__(32);
+var combineURLs = __webpack_require__(33);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -19044,13 +19059,13 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 /**
  * Transform the data for a request or a response
@@ -19071,7 +19086,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19092,7 +19107,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19113,13 +19128,13 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(11);
+var Cancel = __webpack_require__(12);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -19177,7 +19192,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19211,7 +19226,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31154,10 +31169,10 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(36).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(37).setImmediate))
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -31213,7 +31228,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(37);
+__webpack_require__(38);
 // On some exotic environments, it's not clear which object `setimmediate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -31227,7 +31242,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -31417,18 +31432,18 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(8)))
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_js__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_js__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_js__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_js__ = __webpack_require__(50);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_router__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_router__ = __webpack_require__(77);
 
 
 
@@ -31437,13 +31452,13 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_3_vue_
 
 var router = new __WEBPACK_IMPORTED_MODULE_3_vue_router__["a" /* default */]({
     mode: 'history',
-    routes: [{ path: '/', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].home, name: 'home' }, { path: '/inventory-officers', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].inventory_main, name: 'inventory_main' }, { path: '/reserve-officers', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].reserve_main, name: 'reserve_main' }, { path: '/partnerships/Military-partnerships-partnership/position', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].position, name: 'position' }, { path: '/partnerships/Military-partnerships-partnership/sections', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].sections, name: 'sections' }, { path: '/contacts', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].contacts, name: 'contacts' }]
+    routes: [{ path: '/', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].home, name: 'home' }, { path: '/officer-category/:alias', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].officer_category }, { path: '/officer-category/training-of-reserve-officers/main', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].reserve_main, name: 'reserve_main' }, { path: '/officer-category/training-of-reserve-officers/news/:alias', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].officer_category_reverse_, name: 'reverse_spec' }, { path: '/officer-category/training-of-reserve-officers/pages/:alias', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].reverse_page, name: 'reverse_common' }, { path: '/officer-category/training-of-frame-officers/main', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].inventory_main, name: 'inventory_main' }, { path: '/officer-category/training-of-frame-officers/news/:alias', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].officer_category, name: 'inventory_spec' }, { path: '/officer-category/training-of-frame-officers/pages/:alias', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].inventory_page, name: 'inventory_common' }, { path: '/reserve-officers', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].reserve_main, name: 'reserve_main' }, { path: '/partnerships/Military-partnerships-partnership/position', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].position, name: 'position' }, { path: '/partnerships/Military-partnerships-partnership/sections', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].sections, name: 'sections' }, { path: '/contacts', component: __WEBPACK_IMPORTED_MODULE_1__components_js__["a" /* default */].contacts, name: 'contacts' }]
 });
 
 /* harmony default export */ __webpack_exports__["a"] = (router);
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31452,9 +31467,9 @@ var router = new __WEBPACK_IMPORTED_MODULE_3_vue_router__["a" /* default */]({
 
 
 var Modules = {
-    header: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('header-app', __webpack_require__(40)),
-    slider: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('slider-app', __webpack_require__(43)),
-    footer: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('footer-app', __webpack_require__(47))
+    header: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('header-app', __webpack_require__(41)),
+    slider: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('slider-app', __webpack_require__(44)),
+    footer: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('footer-app', __webpack_require__(48))
 
     // footer: Vue.component('footer-welcome', require('./components/WelcomeMiracle/modules/footer.vue')),
 
@@ -31463,15 +31478,15 @@ var Modules = {
 /* unused harmony default export */ var _unused_webpack_default_export = (Modules);
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(41)
+var __vue_script__ = __webpack_require__(42)
 /* template */
-var __vue_template__ = __webpack_require__(42)
+var __vue_template__ = __webpack_require__(43)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -31510,55 +31525,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__http_js__ = __webpack_require__(6);
 //
 //
 //
@@ -31577,21 +31549,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
-        $(document).ready(function () {
-            $('ul.sf-menu').superfish({
-                delay: 500,
-                animation: { opacity: 'show' },
-                speed: 'fast'
-            });
-        });
+        this.getMenu();
     },
 
     data: function data() {
         return {
-            routeName: this.$route.name
+            header: null
         };
+    },
+    methods: {
+        getMenu: function getMenu() {
+            var _this = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('menu').then(function (response) {
+                _this.header = response.data;
+                $('ul.sf-menu').superfish({
+                    delay: 500,
+                    animation: { opacity: 'show' },
+                    speed: 'fast'
+                });
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
     },
     watch: {
         '$route': function $route(to, from) {
@@ -31601,7 +31585,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -31626,106 +31610,10 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
-    _c("ul", { staticClass: "sf-menu bottom-layer" }, [
-      _c(
-        "li",
-        { staticClass: "current" },
-        [
-          _c("router-link", { attrs: { to: { name: "home" } } }, [
-            _vm._v("Головна")
-          ])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("li", [
-        _c("a", { staticStyle: { cursor: "default" } }, [
-          _vm._v("Категорія офіцерів")
-        ]),
-        _vm._v(" "),
-        _c("ul", [
-          _c(
-            "li",
-            [
-              _c(
-                "router-link",
-                {
-                  staticClass: "sf-with-ul",
-                  attrs: { to: { name: "inventory_main" } }
-                },
-                [_vm._v("Підготовка офіцерів кадру")]
-              ),
-              _vm._v(" "),
-              _vm._m(1)
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "li",
-            [
-              _c(
-                "router-link",
-                {
-                  staticClass: "sf-with-ul",
-                  attrs: { to: { name: "reserve_main" } }
-                },
-                [_vm._v("Підготовка офіцерів запасу")]
-              ),
-              _vm._v(" "),
-              _vm._m(2)
-            ],
-            1
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _vm._m(3),
-      _vm._v(" "),
-      _c("li", [
-        _c("a", { staticStyle: { cursor: "default" } }, [_vm._v("Наука")]),
-        _vm._v(" "),
-        _c("ul", [
-          _c("li", [
-            _c("a", { staticStyle: { cursor: "default" } }, [
-              _vm._v("Воєнно-наукове товариство")
-            ]),
-            _vm._v(" "),
-            _c("ul", [
-              _c(
-                "li",
-                [
-                  _c("router-link", { attrs: { to: { name: "position" } } }, [
-                    _vm._v("Положення")
-                  ])
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "li",
-                [
-                  _c("router-link", { attrs: { to: { name: "sections" } } }, [
-                    _vm._v("Розділи")
-                  ])
-                ],
-                1
-              )
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c(
-        "li",
-        [
-          _c("router-link", { attrs: { to: { name: "contacts" } } }, [
-            _vm._v("Контакти")
-          ])
-        ],
-        1
-      )
-    ])
+    _c("ul", {
+      staticClass: "sf-menu bottom-layer",
+      domProps: { innerHTML: _vm._s(_vm.header) }
+    })
   ])
 }
 var staticRenderFns = [
@@ -31735,34 +31623,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("a", { attrs: { href: "https://nau.edu.ua/" } }, [
       _c("img", { attrs: { src: "img/logo/contacts.png", alt: "" } })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("ul", [
-      _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Разработка")])]),
-      _vm._v(" "),
-      _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Разработка")])])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("ul", [
-      _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Разработка")])]),
-      _vm._v(" "),
-      _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Разработка")])])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", [
-      _c("a", { attrs: { href: "#" } }, [_vm._v("Про кафедру")])
     ])
   }
 ]
@@ -31776,15 +31636,15 @@ if (false) {
 }
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(44)
+var __vue_script__ = __webpack_require__(45)
 /* template */
-var __vue_template__ = __webpack_require__(46)
+var __vue_template__ = __webpack_require__(47)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -31823,12 +31683,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hooper__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hooper__ = __webpack_require__(46);
 //
 //
 //
@@ -31861,7 +31721,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33034,7 +32894,7 @@ var Navigation = {
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -33087,15 +32947,15 @@ if (false) {
 }
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
 var __vue_script__ = null
 /* template */
-var __vue_template__ = __webpack_require__(48)
+var __vue_template__ = __webpack_require__(49)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -33134,7 +32994,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -33165,7 +33025,7 @@ if (false) {
 }
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33174,27 +33034,34 @@ if (false) {
 
 
 var Components = {
-    app: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('app', __webpack_require__(50)),
-    home: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('home', __webpack_require__(53)),
-    inventory_main: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('home', __webpack_require__(56)),
-    reserve_main: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('home', __webpack_require__(59)),
-    position: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('position', __webpack_require__(62)),
-    sections: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('sections', __webpack_require__(65)),
-    contacts: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('contacts', __webpack_require__(68))
+    app: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('app', __webpack_require__(51)),
+    home: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('home', __webpack_require__(54)),
+    inventory_main: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('home', __webpack_require__(57)),
+    reserve_main: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('home', __webpack_require__(60)),
+    position: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('position', __webpack_require__(63)),
+    sections: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('sections', __webpack_require__(66)),
+    contacts: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('contacts', __webpack_require__(69)),
+
+    officer_category: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('officer_category', __webpack_require__(72)),
+    reverse_common: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('reverse_common', __webpack_require__(75)),
+    inventory_common: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('inventory_common', __webpack_require__(76)),
+    officer_category_reverse_: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('officer_category', __webpack_require__(88)),
+    reverse_page: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('reverse_common', __webpack_require__(75)),
+    inventory_page: __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('reverse_common', __webpack_require__(76))
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (Components);
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(51)
+var __vue_script__ = __webpack_require__(52)
 /* template */
-var __vue_template__ = __webpack_require__(52)
+var __vue_template__ = __webpack_require__(53)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -33233,7 +33100,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33258,7 +33125,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -33289,15 +33156,15 @@ if (false) {
 }
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(54)
+var __vue_script__ = __webpack_require__(55)
 /* template */
-var __vue_template__ = __webpack_require__(55)
+var __vue_template__ = __webpack_require__(56)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -33336,12 +33203,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__http_js__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__http_js__ = __webpack_require__(6);
 //
 //
 //
@@ -33449,7 +33316,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -33629,15 +33496,15 @@ if (false) {
 }
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(57)
+var __vue_script__ = __webpack_require__(58)
 /* template */
-var __vue_template__ = __webpack_require__(58)
+var __vue_template__ = __webpack_require__(59)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -33676,107 +33543,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__http_js__ = __webpack_require__(6);
 //
 //
 //
@@ -33820,297 +33592,162 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-/* harmony default export */ __webpack_exports__["default"] = ({});
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        this.getLastPages();
+        this.getNews();
+    },
+
+    data: function data() {
+        return {
+            last_pages: null,
+            news: null
+        };
+    },
+    methods: {
+        getLastPages: function getLastPages() {
+            var _this = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('last-pages').then(function (response) {
+                _this.last_pages = response.data.data;
+                console.log(_this.last_pages);
+                document.title = 'Головна сторінка Офіцерів кадру';
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        getNews: function getNews() {
+            var _this2 = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('inventory-news').then(function (response) {
+                _this2.news = response.data.data;
+                console.log(_this2.news);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        jump: function jump(name, alias) {
+            this.$router.push({ name: name, params: { alias: alias } });
+        }
+    }
+});
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("main", { staticClass: "military-page" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("section", { staticClass: "content" }, [
+      _c("aside", { staticClass: "militari-sidebar" }, [
+        _c("h2", [_vm._v("Останні Сторінки")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "military-last-news" },
+          _vm._l(_vm.last_pages, function(item) {
+            return _c(
+              "article",
+              {
+                staticClass:
+                  "military-article-preview small revealator-slideright revealator-duration10 revealator-once"
+              },
+              [
+                _c("div", {
+                  staticClass: "img-box",
+                  style: {
+                    backgroundImage:
+                      "url(../../storage/images/" + item.image + ")"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.jump("reverse_spec", item.alias)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "preview-content" }, [
+                  _c("h3", { staticClass: "preview-title" }, [
+                    _vm._v(_vm._s(item.title))
+                  ])
+                ])
+              ]
+            )
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "military-info" }, [
+        _c("h1", [
+          _vm._v("\n                Новини офіцерів Кадру\n            ")
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "military-news" },
+          _vm._l(_vm.news, function(item) {
+            return _c("article", { staticClass: "military-new-article" }, [
+              _c("div", {
+                staticClass: "img-box",
+                style: {
+                  backgroundImage:
+                    "url(../../storage/images/" + item.image + ")"
+                },
+                on: {
+                  click: function($event) {
+                    return _vm.jump("reverse_spec", item.alias)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "article-content",
+                  on: {
+                    click: function($event) {
+                      return _vm.jump("reverse_spec", item.alias)
+                    }
+                  }
+                },
+                [
+                  _c("h3", { staticClass: "article-title" }, [
+                    _vm._v(_vm._s(item.title))
+                  ])
+                ]
+              )
+            ])
+          }),
+          0
+        )
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("main", { staticClass: "military-page" }, [
-      _c("section", { staticClass: "about" }, [
-        _c(
-          "a",
-          {
-            staticClass: "img-full-box",
-            staticStyle: { "background-image": "url('img/officer-first.jpg')" }
-          },
-          [_c("h2", [_vm._v("Докладніше")])]
-        )
-      ]),
-      _vm._v(" "),
-      _c("section", { staticClass: "content" }, [
-        _c("aside", { staticClass: "militari-sidebar" }, [
-          _c("h2", [_vm._v("Навігація офіцерів кадру")]),
-          _vm._v(" "),
-          _c("ul", { staticClass: "page-nav" }, [
-            _c("li", [
-              _vm._v("- "),
-              _c("a", { attrs: { href: "#" } }, [_vm._v("Абітурієнту")])
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _vm._v("- "),
-              _c("a", { attrs: { href: "#" } }, [
-                _vm._v("Спеціальності підготовки")
-              ])
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _vm._v("- "),
-              _c("a", { attrs: { href: "#" } }, [
-                _vm._v("Науково-дослідна лабораторія")
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("h2", [_vm._v("Останні новини")]),
-          _vm._v(" "),
-          _c("div", { staticClass: "military-last-news" }, [
-            _c(
-              "article",
-              {
-                staticClass:
-                  "military-article-preview small revealator-slideright revealator-duration10 revealator-once",
-                staticStyle: { "background-image": "url('/img/article-2.jpg')" }
-              },
-              [
-                _c("div", { staticClass: "preview-content" }, [
-                  _c("h3", { staticClass: "preview-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "preview-category" }, [
-                    _vm._v("КАТЕГОРІЯ")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "preview-date" }, [
-                    _vm._v("27 ЖОВ, 2019")
-                  ])
-                ])
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "article",
-              {
-                staticClass:
-                  "military-article-preview small revealator-slideright revealator-duration10 revealator-once",
-                staticStyle: { "background-image": "url('/img/article-2.jpg')" }
-              },
-              [
-                _c("div", { staticClass: "preview-content" }, [
-                  _c("h3", { staticClass: "preview-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "preview-category" }, [
-                    _vm._v("КАТЕГОРІЯ")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "preview-date" }, [
-                    _vm._v("27 ЖОВ, 2019")
-                  ])
-                ])
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "article",
-              {
-                staticClass:
-                  "military-article-preview small revealator-slideright revealator-duration10 revealator-once",
-                staticStyle: { "background-image": "url('/img/article-2.jpg')" }
-              },
-              [
-                _c("div", { staticClass: "preview-content" }, [
-                  _c("h3", { staticClass: "preview-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "preview-category" }, [
-                    _vm._v("КАТЕГОРІЯ")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "preview-date" }, [
-                    _vm._v("27 ЖОВ, 2019")
-                  ])
-                ])
-              ]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "military-info" }, [
-          _c("h1", [
-            _vm._v("\n                Новини офіцерів кадру\n            ")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "military-news" }, [
-            _c("a", { attrs: { href: "#" } }, [
-              _c("article", { staticClass: "military-new-article" }, [
-                _c("div", { staticClass: "article-img" }, [
-                  _c("img", { attrs: { src: "/img/article.jpg", alt: "" } })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "article-content" }, [
-                  _c("h3", { staticClass: "article-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-desc" }, [
-                    _vm._v(
-                      "\n                                26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-category" }, [
-                    _vm._v(
-                      "\n                                КАТЕГОРІЯ\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-date" }, [
-                    _vm._v(
-                      "\n                                27 ЖОВ, 2019\n                            "
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("article", { staticClass: "military-new-article" }, [
-                _c("div", { staticClass: "article-img" }, [
-                  _c("img", { attrs: { src: "/img/article.jpg", alt: "" } })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "article-content" }, [
-                  _c("h3", { staticClass: "article-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-desc" }, [
-                    _vm._v(
-                      "\n                                26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-category" }, [
-                    _vm._v(
-                      "\n                                КАТЕГОРІЯ\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-date" }, [
-                    _vm._v(
-                      "\n                                27 ЖОВ, 2019\n                            "
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("article", { staticClass: "military-new-article" }, [
-                _c("div", { staticClass: "article-img" }, [
-                  _c("img", { attrs: { src: "/img/article.jpg", alt: "" } })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "article-content" }, [
-                  _c("h3", { staticClass: "article-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-desc" }, [
-                    _vm._v(
-                      "\n                                26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-category" }, [
-                    _vm._v(
-                      "\n                                КАТЕГОРІЯ\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-date" }, [
-                    _vm._v(
-                      "\n                                27 ЖОВ, 2019\n                            "
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("article", { staticClass: "military-new-article" }, [
-                _c("div", { staticClass: "article-img" }, [
-                  _c("img", { attrs: { src: "/img/article.jpg", alt: "" } })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "article-content" }, [
-                  _c("h3", { staticClass: "article-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-desc" }, [
-                    _vm._v(
-                      "\n                                26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-category" }, [
-                    _vm._v(
-                      "\n                                КАТЕГОРІЯ\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-date" }, [
-                    _vm._v(
-                      "\n                                27 ЖОВ, 2019\n                            "
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("article", { staticClass: "military-new-article" }, [
-                _c("div", { staticClass: "article-img" }, [
-                  _c("img", { attrs: { src: "/img/article.jpg", alt: "" } })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "article-content" }, [
-                  _c("h3", { staticClass: "article-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-desc" }, [
-                    _vm._v(
-                      "\n                                26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-category" }, [
-                    _vm._v(
-                      "\n                                КАТЕГОРІЯ\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-date" }, [
-                    _vm._v(
-                      "\n                                27 ЖОВ, 2019\n                            "
-                    )
-                  ])
-                ])
-              ])
-            ])
-          ])
-        ])
-      ])
+    return _c("section", { staticClass: "about" }, [
+      _c(
+        "a",
+        {
+          staticClass: "img-full-box",
+          staticStyle: {
+            "background-image": "url('../../img/officer-first.jpg')"
+          }
+        },
+        [_c("h2", [_vm._v("Докладніше")])]
+      )
     ])
   }
 ]
@@ -34124,15 +33761,15 @@ if (false) {
 }
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(60)
+var __vue_script__ = __webpack_require__(61)
 /* template */
-var __vue_template__ = __webpack_require__(61)
+var __vue_template__ = __webpack_require__(62)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -34171,91 +33808,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__http_js__ = __webpack_require__(6);
 //
 //
 //
@@ -34299,269 +33857,174 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {}
+    mounted: function mounted() {
+        this.getLastPages();
+        this.getNews();
+    },
+
+    data: function data() {
+        return {
+            last_pages: null,
+            news: null
+        };
+    },
+    methods: {
+        getLastPages: function getLastPages() {
+            var _this = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('last-pages').then(function (response) {
+                _this.last_pages = response.data.data;
+                console.log(_this.last_pages);
+                document.title = 'Головна сторінка Офіцерів запасу';
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        getNews: function getNews() {
+            var _this2 = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('reserve-news').then(function (response) {
+                _this2.news = response.data.data;
+                console.log(_this2.news);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        jump: function jump(name, alias) {
+            this.$router.push({ name: name, params: { alias: alias } });
+        }
+    }
+
 });
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("main", { staticClass: "military-page" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("section", { staticClass: "content" }, [
+      _c("aside", { staticClass: "militari-sidebar" }, [
+        _c("h2", [_vm._v("Останні Сторінки")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "military-last-news" },
+          _vm._l(_vm.last_pages, function(item) {
+            return _c(
+              "article",
+              {
+                staticClass:
+                  "military-article-preview small revealator-slideright revealator-duration10 revealator-once"
+              },
+              [
+                _c("div", {
+                  staticClass: "img-box",
+                  style: {
+                    backgroundImage:
+                      "url(../../storage/images/" + item.image + ")"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.jump("reverse_common", item.alias)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "preview-content",
+                    on: {
+                      click: function($event) {
+                        return _vm.jump("reverse_common", item.alias)
+                      }
+                    }
+                  },
+                  [
+                    _c("h3", { staticClass: "preview-title" }, [
+                      _vm._v(_vm._s(item.title))
+                    ])
+                  ]
+                )
+              ]
+            )
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "military-info" }, [
+        _c("h1", [
+          _vm._v("\n                Новини офіцерів Запасу\n            ")
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "military-news" },
+          _vm._l(_vm.news, function(item) {
+            return _c("article", { staticClass: "military-new-article" }, [
+              _c("div", {
+                staticClass: "img-box",
+                style: {
+                  backgroundImage:
+                    "url(../../storage/images/" + item.image + ")"
+                },
+                on: {
+                  click: function($event) {
+                    return _vm.jump("reverse_spec", item.alias)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "article-content",
+                  on: {
+                    click: function($event) {
+                      return _vm.jump("reverse_spec", item.alias)
+                    }
+                  }
+                },
+                [
+                  _c("h3", { staticClass: "article-title" }, [
+                    _vm._v(_vm._s(item.title))
+                  ])
+                ]
+              )
+            ])
+          }),
+          0
+        )
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("main", { staticClass: "military-page" }, [
-      _c("section", { staticClass: "about" }, [
-        _c(
-          "a",
-          {
-            staticClass: "img-full-box",
-            staticStyle: { "background-image": "url('img/officer-second.jpg')" }
-          },
-          [_c("h2", [_vm._v("Докладніше")])]
-        )
-      ]),
-      _vm._v(" "),
-      _c("section", { staticClass: "content" }, [
-        _c("aside", { staticClass: "militari-sidebar" }, [
-          _c("h2", [_vm._v("Навігація офіцерів кадру")]),
-          _vm._v(" "),
-          _c("ul", { staticClass: "page-nav" }, [
-            _c("li", [
-              _vm._v("- "),
-              _c("a", { attrs: { href: "#" } }, [_vm._v("Абітурієнту")])
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _vm._v("- "),
-              _c("a", { attrs: { href: "#" } }, [
-                _vm._v("Спеціальності підготовки")
-              ])
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _vm._v("- "),
-              _c("a", { attrs: { href: "#" } }, [
-                _vm._v("Науково-дослідна лабораторія")
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("h2", [_vm._v("Останні новини")]),
-          _vm._v(" "),
-          _c("div", { staticClass: "military-last-news" }, [
-            _c(
-              "article",
-              {
-                staticClass:
-                  "military-article-preview small revealator-slideright revealator-duration10 revealator-once",
-                staticStyle: { "background-image": "url('/img/article-2.jpg')" }
-              },
-              [
-                _c("div", { staticClass: "preview-content" }, [
-                  _c("h3", { staticClass: "preview-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "preview-category" }, [
-                    _vm._v("КАТЕГОРІЯ")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "preview-date" }, [
-                    _vm._v("27 ЖОВ, 2019")
-                  ])
-                ])
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "article",
-              {
-                staticClass:
-                  "military-article-preview small revealator-slideright revealator-duration10 revealator-once",
-                staticStyle: { "background-image": "url('/img/article-2.jpg')" }
-              },
-              [
-                _c("div", { staticClass: "preview-content" }, [
-                  _c("h3", { staticClass: "preview-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "preview-category" }, [
-                    _vm._v("КАТЕГОРІЯ")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "preview-date" }, [
-                    _vm._v("27 ЖОВ, 2019")
-                  ])
-                ])
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "article",
-              {
-                staticClass:
-                  "military-article-preview small revealator-slideright revealator-duration10 revealator-once",
-                staticStyle: { "background-image": "url('/img/article-2.jpg')" }
-              },
-              [
-                _c("div", { staticClass: "preview-content" }, [
-                  _c("h3", { staticClass: "preview-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "preview-category" }, [
-                    _vm._v("КАТЕГОРІЯ")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "preview-date" }, [
-                    _vm._v("27 ЖОВ, 2019")
-                  ])
-                ])
-              ]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "military-info" }, [
-          _c("h1", [
-            _vm._v("\n                Новини офіцерів кадру\n            ")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "military-news" }, [
-            _c("a", { attrs: { href: "#" } }, [
-              _c("article", { staticClass: "military-new-article" }, [
-                _c("div", { staticClass: "article-img" }, [
-                  _c("img", { attrs: { src: "/img/article-2.jpg", alt: "" } })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "article-content" }, [
-                  _c("h3", { staticClass: "article-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-desc" }, [
-                    _vm._v(
-                      "\n                                26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-category" }, [
-                    _vm._v(
-                      "\n                                КАТЕГОРІЯ\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-date" }, [
-                    _vm._v(
-                      "\n                                27 ЖОВ, 2019\n                            "
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("article", { staticClass: "military-new-article" }, [
-                _c("div", { staticClass: "article-img" }, [
-                  _c("img", { attrs: { src: "/img/article-2.jpg", alt: "" } })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "article-content" }, [
-                  _c("h3", { staticClass: "article-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-desc" }, [
-                    _vm._v(
-                      "\n                                26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-category" }, [
-                    _vm._v(
-                      "\n                                КАТЕГОРІЯ\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-date" }, [
-                    _vm._v(
-                      "\n                                27 ЖОВ, 2019\n                            "
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("article", { staticClass: "military-new-article" }, [
-                _c("div", { staticClass: "article-img" }, [
-                  _c("img", { attrs: { src: "/img/article-2.jpg", alt: "" } })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "article-content" }, [
-                  _c("h3", { staticClass: "article-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-desc" }, [
-                    _vm._v(
-                      "\n                                26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-category" }, [
-                    _vm._v(
-                      "\n                                КАТЕГОРІЯ\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-date" }, [
-                    _vm._v(
-                      "\n                                27 ЖОВ, 2019\n                            "
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("article", { staticClass: "military-new-article" }, [
-                _c("div", { staticClass: "article-img" }, [
-                  _c("img", { attrs: { src: "/img/article-2.jpg", alt: "" } })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "article-content" }, [
-                  _c("h3", { staticClass: "article-title" }, [
-                    _vm._v("День відкритих дверей")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-desc" }, [
-                    _vm._v(
-                      "\n                                26 жовтня в Державному музеї авіації пройшов День відкритих дверей для всіх бажаючих навчатися на кафедрі військової підготовки Національного авіаційного університету. Познайомитись з умовами вступу та навчання прибули майбутні вступники та їхні батьки. Усі...\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-category" }, [
-                    _vm._v(
-                      "\n                                КАТЕГОРІЯ\n                            "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "article-date" }, [
-                    _vm._v(
-                      "\n                                27 ЖОВ, 2019\n                            "
-                    )
-                  ])
-                ])
-              ])
-            ])
-          ])
-        ])
-      ])
+    return _c("section", { staticClass: "about" }, [
+      _c(
+        "a",
+        {
+          staticClass: "img-full-box",
+          staticStyle: {
+            "background-image": "url('../../img/officer-second.jpg')"
+          }
+        },
+        [_c("h2", [_vm._v("Докладніше")])]
+      )
     ])
   }
 ]
@@ -34575,15 +34038,15 @@ if (false) {
 }
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(63)
+var __vue_script__ = __webpack_require__(64)
 /* template */
-var __vue_template__ = __webpack_require__(64)
+var __vue_template__ = __webpack_require__(65)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -34622,7 +34085,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35017,7 +34480,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -36247,15 +35710,15 @@ if (false) {
 }
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(66)
+var __vue_script__ = __webpack_require__(67)
 /* template */
-var __vue_template__ = __webpack_require__(67)
+var __vue_template__ = __webpack_require__(68)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -36294,7 +35757,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36453,7 +35916,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -36703,15 +36166,15 @@ if (false) {
 }
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(69)
+var __vue_script__ = __webpack_require__(70)
 /* template */
-var __vue_template__ = __webpack_require__(70)
+var __vue_template__ = __webpack_require__(71)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -36750,7 +36213,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36882,7 +36345,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -37158,7 +36621,317 @@ if (false) {
 }
 
 /***/ }),
-/* 71 */
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(73)
+/* template */
+var __vue_template__ = __webpack_require__(74)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/officer_category.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-25ba3c7e", Component.options)
+  } else {
+    hotAPI.reload("data-v-25ba3c7e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 73 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__http_js__ = __webpack_require__(6);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        this.getLastPages();
+        this.getNew(this.$route.params.alias);
+        // this.getPage(this.$route.params.alias);
+    },
+
+    data: function data() {
+        return {
+            // page: null,
+            last_pages: null,
+            new_item: null
+        };
+    },
+    methods: {
+        // getPage(alias){
+        //     HTTP.get(`page` + '/' + alias)
+        //         .then(response => {
+        //             this.page = response.data;
+        //             document.title = this.page.title
+        //         }).catch(error => {
+        //         console.log(error);
+        //     })
+        // },
+
+        getLastPages: function getLastPages() {
+            var _this = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('last-pages').then(function (response) {
+                _this.last_pages = response.data.data;
+                console.log(_this.last_pages);
+                document.title = 'Головна сторінка Офіцерів запасу';
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        getNew: function getNew(alias) {
+            var _this2 = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('inventory-new' + '/' + alias).then(function (response) {
+                _this2.new_item = response.data;
+                console.log(_this2.new_item);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        jump: function jump(name, alias) {
+            this.$router.push({ name: name, params: { alias: alias } });
+        }
+    }
+
+});
+
+/***/ }),
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("main", { staticClass: "military-page" }, [
+    _c("section", { staticClass: "content" }, [
+      _c("aside", { staticClass: "militari-sidebar" }, [
+        _c("h2", [_vm._v("Останні Сторінки")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "military-last-news" },
+          _vm._l(_vm.last_pages, function(item) {
+            return _c(
+              "article",
+              {
+                staticClass:
+                  "military-article-preview small revealator-slideright revealator-duration10 revealator-once"
+              },
+              [
+                _c("div", {
+                  staticClass: "img-box",
+                  style: {
+                    backgroundImage: "url(/storage/images/" + item.image + ")"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.jump("reverse_common", item.alias)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "preview-content",
+                    on: {
+                      click: function($event) {
+                        return _vm.jump("reverse_common", item.alias)
+                      }
+                    }
+                  },
+                  [
+                    _c("h3", { staticClass: "preview-title" }, [
+                      _vm._v(_vm._s(item.title))
+                    ])
+                  ]
+                )
+              ]
+            )
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _vm.new_item
+        ? _c("div", { staticClass: "military-info" }, [
+            _c("h1", { domProps: { innerHTML: _vm._s(_vm.new_item.title) } }),
+            _vm._v(" "),
+            _c("div", {
+              staticClass: "military-page-content",
+              domProps: { innerHTML: _vm._s(_vm.new_item.text) }
+            })
+          ])
+        : _vm._e()
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-25ba3c7e", module.exports)
+  }
+}
+
+/***/ }),
+/* 75 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(93)
+/* template */
+var __vue_template__ = __webpack_require__(94)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/reserveOfficers/common.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3a985790", Component.options)
+  } else {
+    hotAPI.reload("data-v-3a985790", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(91)
+/* template */
+var __vue_template__ = __webpack_require__(92)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/inventoryOfficers/common.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-05b12fd8", Component.options)
+  } else {
+    hotAPI.reload("data-v-05b12fd8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 77 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40047,15 +39820,15 @@ if (inBrowser && window.Vue) {
 
 
 /***/ }),
-/* 72 */
+/* 78 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return store; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(73);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_axios__);
 
 
@@ -40076,7 +39849,7 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
 });
 
 /***/ }),
-/* 73 */
+/* 79 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -41101,7 +40874,7 @@ var index_esm = {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
 
 /***/ }),
-/* 74 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*----------------------------------------*\
@@ -42000,28 +41773,552 @@ var index_esm = {
 
 
 /***/ }),
-/* 75 */
+/* 81 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 76 */,
-/* 77 */,
-/* 78 */,
-/* 79 */,
-/* 80 */
+/* 82 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(89)
+/* template */
+var __vue_template__ = __webpack_require__(90)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/officer_category_reverse_.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-71218ee4", Component.options)
+  } else {
+    hotAPI.reload("data-v-71218ee4", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 89 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HTTP; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__http_js__ = __webpack_require__(6);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
-var HTTP = __WEBPACK_IMPORTED_MODULE_0_axios___default.a.create({
-    baseURL: 'http://localhost:3000/mc-api/p1/'
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        this.getLastPages();
+        this.getNew(this.$route.params.alias);
+        // this.getPage(this.$route.params.alias);
+    },
+
+    data: function data() {
+        return {
+            // page: null,
+            last_pages: null,
+            new_item: null
+        };
+    },
+    methods: {
+        // getPage(alias){
+        //     HTTP.get(`page` + '/' + alias)
+        //         .then(response => {
+        //             this.page = response.data;
+        //             document.title = this.page.title
+        //         }).catch(error => {
+        //         console.log(error);
+        //     })
+        // },
+
+        getLastPages: function getLastPages() {
+            var _this = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('last-pages').then(function (response) {
+                _this.last_pages = response.data.data;
+                console.log(_this.last_pages);
+                document.title = 'Головна сторінка Офіцерів запасу';
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        getNew: function getNew(alias) {
+            var _this2 = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('reserve-new' + '/' + alias).then(function (response) {
+                _this2.new_item = response.data;
+                console.log(_this2.new_item);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        jump: function jump(name, alias) {
+            this.$router.push({ name: name, params: { alias: alias } });
+        }
+    }
+
 });
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("main", { staticClass: "military-page" }, [
+    _c("section", { staticClass: "content" }, [
+      _c("aside", { staticClass: "militari-sidebar" }, [
+        _c("h2", [_vm._v("Останні Сторінки")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "military-last-news" },
+          _vm._l(_vm.last_pages, function(item) {
+            return _c(
+              "article",
+              {
+                staticClass:
+                  "military-article-preview small revealator-slideright revealator-duration10 revealator-once"
+              },
+              [
+                _c("div", {
+                  staticClass: "img-box",
+                  style: {
+                    backgroundImage: "url(/storage/images/" + item.image + ")"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.jump("reverse_common", item.alias)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "preview-content",
+                    on: {
+                      click: function($event) {
+                        return _vm.jump("reverse_common", item.alias)
+                      }
+                    }
+                  },
+                  [
+                    _c("h3", { staticClass: "preview-title" }, [
+                      _vm._v(_vm._s(item.title))
+                    ])
+                  ]
+                )
+              ]
+            )
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _vm.new_item
+        ? _c("div", { staticClass: "military-info" }, [
+            _c("h1", { domProps: { innerHTML: _vm._s(_vm.new_item.title) } }),
+            _vm._v(" "),
+            _c("div", {
+              staticClass: "military-page-content",
+              domProps: { innerHTML: _vm._s(_vm.new_item.text) }
+            })
+          ])
+        : _vm._e()
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-71218ee4", module.exports)
+  }
+}
+
+/***/ }),
+/* 91 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__http_js__ = __webpack_require__(6);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        this.getNews();
+        this.getPage(this.$route.params.alias);
+    },
+
+    data: function data() {
+        return {
+            news: null,
+            page: null
+        };
+    },
+    methods: {
+        getPage: function getPage(alias) {
+            var _this = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('page' + '/' + alias).then(function (response) {
+                _this.page = response.data;
+                document.title = _this.page.title;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        getNews: function getNews() {
+            var _this2 = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('inventory-news').then(function (response) {
+                _this2.news = response.data.data;
+                console.log(_this2.news);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        jump: function jump(name, alias) {
+            this.$router.push({ name: name, params: { alias: alias } });
+        }
+    }
+});
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("main", { staticClass: "military-page" }, [
+    _c("section", { staticClass: "content" }, [
+      _c("aside", { staticClass: "militari-sidebar" }, [
+        _c("h2", [_vm._v("Новини")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "military-last-news" },
+          _vm._l(_vm.news, function(item) {
+            return _c(
+              "article",
+              {
+                staticClass:
+                  "military-article-preview small revealator-slideright revealator-duration10 revealator-once"
+              },
+              [
+                _c("div", {
+                  staticClass: "img-box",
+                  style: {
+                    backgroundImage:
+                      "url(../../storage/images/" + item.image + ")"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.jump("reverse_common", item.alias)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "preview-content",
+                    on: {
+                      click: function($event) {
+                        return _vm.jump("reverse_common", item.alias)
+                      }
+                    }
+                  },
+                  [
+                    _c("h3", { staticClass: "preview-title" }, [
+                      _vm._v(_vm._s(item.title))
+                    ])
+                  ]
+                )
+              ]
+            )
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _vm.page
+        ? _c("div", { staticClass: "military-info" }, [
+            _c("h1", { domProps: { innerHTML: _vm._s(_vm.page.title) } }),
+            _vm._v(" "),
+            _c("div", {
+              staticClass: "military-page-content",
+              domProps: { innerHTML: _vm._s(_vm.new_item.text) }
+            })
+          ])
+        : _vm._e()
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-05b12fd8", module.exports)
+  }
+}
+
+/***/ }),
+/* 93 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__http_js__ = __webpack_require__(6);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        this.getNews();
+        this.getPage(this.$route.params.alias);
+    },
+
+    data: function data() {
+        return {
+            news: null,
+            page: null
+        };
+    },
+    methods: {
+        getPage: function getPage(alias) {
+            var _this = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('page' + '/' + alias).then(function (response) {
+                _this.page = response.data;
+                document.title = _this.page.title;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        getNews: function getNews() {
+            var _this2 = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* HTTP */].get('reserve-news').then(function (response) {
+                _this2.news = response.data.data;
+                console.log(_this2.news);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        jump: function jump(name, alias) {
+            this.$router.push({ name: name, params: { alias: alias } });
+        }
+    }
+});
+
+/***/ }),
+/* 94 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("main", { staticClass: "military-page" }, [
+    _c("section", { staticClass: "content" }, [
+      _c("aside", { staticClass: "militari-sidebar" }, [
+        _c("h2", [_vm._v("Новини")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "military-last-news" },
+          _vm._l(_vm.news, function(new_item) {
+            return _c(
+              "article",
+              {
+                staticClass:
+                  "military-article-preview small revealator-slideright revealator-duration10 revealator-once"
+              },
+              [
+                _c("div", {
+                  staticClass: "img-box",
+                  style: {
+                    backgroundImage:
+                      "url(/storage/images/" + new_item.image + ")"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.jump("reverse_spec", new_item.alias)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "preview-content",
+                    on: {
+                      click: function($event) {
+                        return _vm.jump("reverse_spec", new_item.alias)
+                      }
+                    }
+                  },
+                  [
+                    _c("h3", { staticClass: "preview-title" }, [
+                      _vm._v(_vm._s(new_item.title))
+                    ])
+                  ]
+                )
+              ]
+            )
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _vm.page
+        ? _c("div", { staticClass: "military-info" }, [
+            _c("h1", { domProps: { innerHTML: _vm._s(_vm.page.title) } }),
+            _vm._v(" "),
+            _c("div", {
+              staticClass: "military-page-content",
+              domProps: { innerHTML: _vm._s(_vm.page.text) }
+            })
+          ])
+        : _vm._e()
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-3a985790", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

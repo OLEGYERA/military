@@ -158,46 +158,25 @@ article.military-article-preview {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
   width: 48%;
-  height: 300px;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
   position: relative;
-  border-radius: 4px;
-  -webkit-box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.6);
-          box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.6);
   margin-bottom: 4%;
-  border: 1px solid rgba(25, 21, 8, 0.3);
   cursor: pointer;
-  overflow: hidden;
-}
-
-article.military-article-preview::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.05);
-  z-index: 1;
 }
 
 article.military-article-preview img {
   width: 100%;
   height: 100%;
-}
-
-article.military-article-preview .preview-content {
-  position: absolute;
-  z-index: 2;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #2A2A2A;
-  padding: 5px 10px;
 }
 
 article.military-article-preview .preview-content .preview-title {
@@ -207,29 +186,34 @@ article.military-article-preview .preview-content .preview-title {
   font-weight: 600;
 }
 
-article.military-article-preview .preview-content .preview-category {
-  position: absolute;
-  left: 10px;
-  bottom: 5px;
-  font-weight: 600;
-  color: #f4645f;
-}
-
-article.military-article-preview .preview-content .preview-date {
-  position: absolute;
-  bottom: 5px;
-  right: 10px;
-  color: #fff;
-}
-
 article.military-article-preview.small {
   width: 100%;
-  height: 180px;
   margin-bottom: 1.5em;
+  -webkit-box-shadow: 2px 2px 3px rgba(62, 62, 62, 0.27);
+          box-shadow: 2px 2px 3px rgba(62, 62, 62, 0.27);
+  border: 1px solid #c8c8c8;
+}
+
+article.military-article-preview.small .img-box {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  height: 150px;
+  background-position: center center;
+  background-size: cover;
+  border-bottom: 2px solid #3e3e3e;
 }
 
 article.military-article-preview.small .preview-content {
-  font-size: 0.8em;
+  background-color: #fff;
+}
+
+article.military-article-preview.small .preview-content .preview-title {
+  color: #3e3e3e;
+  font-size: 1.2em;
+  padding: 5px 8px;
+  margin-bottom: 10px;
 }
 
 .military-nau {
@@ -683,7 +667,7 @@ article.military-article-preview.small .preview-content {
 .military-nau .military-page section.content aside.militari-sidebar {
   width: 28%;
   border-right: 1px solid rgba(25, 21, 8, 0.3);
-  padding: 15px 15px;
+  padding: 15px 25px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   display: -webkit-box;
@@ -697,14 +681,14 @@ article.military-article-preview.small .preview-content {
 }
 
 .military-nau .military-page section.content aside.militari-sidebar h2 {
-  margin: 10px 0em;
+  margin: 10px 0em 20px;
   font-size: 1.4em;
   font-weight: 600;
   color: #453f1d;
 }
 
 .military-nau .military-page section.content aside.militari-sidebar h2:first-child {
-  margin-top: 0px;
+  margin-top: 15px;
 }
 
 .military-nau .military-page section.content aside.militari-sidebar .page-nav {
@@ -782,21 +766,21 @@ article.military-article-preview.small .preview-content {
 
 .military-nau .military-page section.content .military-info {
   width: 72%;
-  padding: 15px;
+  padding: 15px 25px;
 }
 
 .military-nau .military-page section.content .military-info h1 {
   font-weight: 600;
-  margin: 0em 0em 15px;
+  margin: 15px 0em 15px;
   line-height: 100%;
   text-align: center;
-  color: #453f1d;
-  font-size: 2em;
+  color: #3e3e3e;
+  font-size: 1.6em;
 }
 
 .military-nau .military-page section.content .military-info h2 {
   margin: 0px 0em 15px;
-  font-size: 1.5em;
+  font-size: 1.4em;
   font-weight: 600;
   color: #423c1b;
 }
@@ -819,30 +803,22 @@ article.military-article-preview.small .preview-content {
       -ms-flex-pack: justify;
           justify-content: space-between;
   width: 100%;
-  height: 260px;
   margin-bottom: 1em;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-}
-
-.military-nau .military-page section.content .military-info .military-news .military-new-article .article-img {
-  width: 40%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  padding: 10px;
-  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  cursor: pointer;
 }
 
-.military-nau .military-page section.content .military-info .military-news .military-new-article .article-img img {
-  height: 100%;
+.military-nau .military-page section.content .military-info .military-news .military-new-article .img-box {
   width: 100%;
+  height: 280px;
+  background-size: cover;
+  background-position: center center;
 }
 
 .military-nau .military-page section.content .military-info .military-news .military-new-article .article-content {
@@ -855,7 +831,7 @@ article.military-article-preview.small .preview-content {
       -ms-flex-direction: column;
           flex-direction: column;
   padding: 10px;
-  color: #000;
+  color: #3e3e3e;
   position: relative;
 }
 
@@ -1101,5 +1077,10 @@ article.military-article-preview.small .preview-content {
 
 .military-nau .military-page section.content .military-info .militari-sections .item-phone a:hover {
   color: dodgerblue;
+}
+
+.military-nau .military-page section.content .military-info .military-page-content {
+  font-size: 1.1em;
+  line-height: 1.6em;
 }
 
