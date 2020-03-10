@@ -6,6 +6,6 @@
         {{$menu['parent']->name}}
     </option>
 
-    @include(env('VIEW_PATH').'adm.menu.selected', ['menus' => $menu['child'], 'cur_menu' => $cur_menu, 'step' => ++$step])
+    @include('OLEGYERA.adm.menu.selected', ['menus' => $menu['child'], 'cur_menu' => $cur_menu, 'step' => ++$step])
     <?php $step-- ?>
 @endforeach

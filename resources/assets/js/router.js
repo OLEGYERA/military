@@ -9,7 +9,7 @@ const router = new VueRouter
     mode: 'history',
     routes: [
         {path: '/', component: C.home, name: 'home'},
-        {path: '/officer-category/:alias', component: C.officer_category},
+        // {path: '/officer-category/:alias', component: C.officer_category},
 
         {path: '/officer-category/training-of-reserve-officers/main', component: C.reserve_main, name: 'reserve_main'},
         {path: '/officer-category/training-of-reserve-officers/news/:alias', component: C.officer_category_reverse_, name: 'reverse_spec'},

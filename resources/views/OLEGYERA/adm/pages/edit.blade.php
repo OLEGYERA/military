@@ -73,7 +73,7 @@
                                 }
                             ?>
                             {{$od}}
-                            @include(env('VIEW_PATH').'adm.pages.menu', ['menus' => $menu['child'], 'old_menu' => $od, 'step' => 1])
+                            @include('OLEGYERA.adm.pages.menu', ['menus' => $menu['child'], 'old_menu' => $od, 'step' => 1])
                         @endforeach
                     </select>
                 </div>

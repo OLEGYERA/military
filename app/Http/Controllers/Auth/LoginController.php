@@ -61,12 +61,12 @@ class LoginController extends Controller
             }
         }
 
-        return view(env('VIEW_PATH') . 'template.adm_index')
+        return view('OLEGYERA.adm.template.adm_index')
             ->with([
-                'header' => view(env('VIEW_PATH') . 'adm.layouts.header')->render(),
-                'content' => view(env('VIEW_PATH') . 'auth.login')->render(),
-                'footer' => view(env('VIEW_PATH') . 'adm.layouts.footer')->render(),
-                'is_auth' => true,
+                'header' => view('OLEGYERA.adm.layouts.header')->render(),
+                'content' => view('OLEGYERA.auth.login')->render(),
+                'footer' => view('OLEGYERA.adm.layouts.footer')->render(),
+                'is_auth' => true
             ]);
     }
 }

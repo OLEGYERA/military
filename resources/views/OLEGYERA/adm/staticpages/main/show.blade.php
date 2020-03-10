@@ -4,7 +4,7 @@
         <div class="box-row">
             <div class="box-2-col">
                 <h3>Категорія офіцерів запасу</h3>
-                <div class="box-img" style="background-image: url({{asset('storage/static/' . $img_one->path)}});"></div>
+                <div class="box-img" @if($img_one)style="background-image: url({{asset('storage/static/' . $img_one->path)}});" @endif></div>
                 <form class="box-manage-row" action="{{route('global_main_edit_category')}}" method="POST"  enctype="multipart/form-data">
                     {{ csrf_field() }}
                     @if ($errors->has('image'))
@@ -20,7 +20,7 @@
             </div>
             <div class="box-2-col">
                 <h3>Категорія офіцерів кадру</h3>
-                <div class="box-img" style="background-image: url({{asset('storage/static/' . $img_two->path)}});"></div>
+                <div class="box-img" @if($img_two)style="background-image: url({{asset('storage/static/' . $img_two->path)}});" @endif></div>
                 <form class="box-manage-row" action="{{route('global_main_edit_category')}}" method="POST"  enctype="multipart/form-data">
                     {{ csrf_field() }}
                     @if ($errors->has('image'))

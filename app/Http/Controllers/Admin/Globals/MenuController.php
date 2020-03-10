@@ -13,7 +13,7 @@ class MenuController extends BaseController
 
 
     public function manageMenu(Request $request){
-        $this->content = view(env('VIEW_PATH') . 'adm.menu.manage')->with([
+        $this->content = view('OLEGYERA.adm.menu.manage')->with([
             'menus' => $this->getMenu(),
         ])->render();
         return $this->renderPage();
@@ -58,7 +58,7 @@ class MenuController extends BaseController
             $cur_menu->save();
             return redirect()->route('global_manage_menu');
         }
-        $this->content = view(env('VIEW_PATH') . 'adm.menu.edit')->with([
+        $this->content = view('OLEGYERA.adm.menu.edit')->with([
             'menus' => $this->getMenu(),
             'cur_menu' => $cur_menu,
         ])->render();

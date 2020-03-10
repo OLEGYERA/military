@@ -24,7 +24,7 @@ class StaticPageController extends BaseController
         $img_one = CatgoryImage::where('type', 1)->first();
         $img_two = CatgoryImage::where('type', 2)->first();
         $sliders = Slider::all();
-        $this->content = view(env('VIEW_PATH') . 'adm.staticpages.main.show')->with([
+        $this->content = view('OLEGYERA.adm.staticpages.main.show')->with([
             'img_one' => $img_one,
             'img_two' => $img_two,
             'sliders' => $sliders,
@@ -39,7 +39,9 @@ class StaticPageController extends BaseController
         else{
             $img = CatgoryImage::where('type', 2)->first();
         }
-        unlink(storage_path('app/public/static/' . $img->path));
+        if($img->path){
+            unlink(storage_path('app/public/static/' . $img->path));
+        }
         $img->path = $request->type . '_' . $request->image->getClientOriginalName();
         $request->image->move(storage_path('app/public/static/'),  $img->path);
         $img->save();
@@ -63,7 +65,7 @@ class StaticPageController extends BaseController
 
     public function showAll(){
         $pages = Page::paginate(25);
-        $this->content = view(env('VIEW_PATH') . 'adm.pages.show')->with([
+        $this->content = view('OLEGYERA.adm.pages.show')->with([
             'pages' => $pages,
         ])->render();
         return $this->renderPage();
@@ -89,7 +91,7 @@ class StaticPageController extends BaseController
             $page_new = Page::create($data);
             return redirect()->route('global_edit_page', $page_new->alias);
         }
-        $this->content = view(env('VIEW_PATH') . 'adm.pages.create')->with(['menus' => $this->getMenu()])->render();
+        $this->content = view('OLEGYERA.adm.pages.create')->with(['menus' => $this->getMenu()])->render();
         return $this->renderPage();
     }
 
@@ -123,7 +125,7 @@ class StaticPageController extends BaseController
             $page->save();
             return redirect()->route('global_edit_page', ['alias' => $page->alias]);
         }
-        $this->content = view(env('VIEW_PATH') . 'adm.pages.edit')->with(['page' => $page, 'menus' => $this->getMenu()])->render();
+        $this->content = view('OLEGYERA.adm.pages.edit')->with(['page' => $page, 'menus' => $this->getMenu()])->render();
         return $this->renderPage();
     }
 

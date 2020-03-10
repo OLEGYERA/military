@@ -10,7 +10,7 @@
                     @else
                         <option value="{{$menu['parent']->id}}" @if($menu['parent']->id == $cur_menu->parent) selected @endif @if($menu['parent']->id == $cur_menu->id) disabled @endif>{{$menu['parent']->name}}</option>
                     @endif
-                    @include(env('VIEW_PATH').'adm.menu.selected', ['menus' => $menu['child'], 'cur_menu' => $cur_menu, 'step' => 1])
+                    @include('OLEGYERA.adm.menu.selected', ['menus' => $menu['child'], 'cur_menu' => $cur_menu, 'step' => 1])
                 @endforeach
             </select>
             <input type="name" name="name" placeholder="Назва випадаючого меню" value="{{$cur_menu->name}}" required class="ru-title">

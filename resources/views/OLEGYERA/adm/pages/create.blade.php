@@ -45,7 +45,7 @@
                             @else
                                 <option value="{{$menu['parent']->id}}" @if($menu['parent']->id ==  old('menu')) selected @endif>{{$menu['parent']->name}}</option>
                             @endif
-                            @include(env('VIEW_PATH').'adm.pages.menu', ['menus' => $menu['child'], 'old_menu' => old('menu'), 'step' => 1])
+                            @include('OLEGYERA.adm.pages.menu', ['menus' => $menu['child'], 'old_menu' => old('menu'), 'step' => 1])
                         @endforeach
                     </select>
                 </div>

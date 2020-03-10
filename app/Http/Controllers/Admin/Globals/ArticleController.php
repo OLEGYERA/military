@@ -11,7 +11,7 @@ class ArticleController extends BaseController
 
     public function showArticles(){
         $articles = Article::paginate(25);
-        $this->content = view(env('VIEW_PATH') . 'adm.articles.show')->with([
+        $this->content = view('OLEGYERA.adm.articles.show')->with([
             'articles' => $articles,
         ])->render();
         return $this->renderPage();
@@ -45,7 +45,7 @@ class ArticleController extends BaseController
             $article_new = Article::create($data);
             return redirect()->route('edit_article', $article_new->alias);
         }
-        $this->content = view(env('VIEW_PATH') . 'adm.articles.create')->render();
+        $this->content = view('OLEGYERA.adm.articles.create')->render();
         return $this->renderPage();
     }
 
@@ -91,7 +91,7 @@ class ArticleController extends BaseController
             $article->save();
             return redirect()->route('edit_article', ['alias' => $article->alias]);
         }
-        $this->content = view(env('VIEW_PATH') . 'adm.articles.edit')->with(['article' => $article])->render();
+        $this->content = view('OLEGYERA.adm.articles.edit')->with(['article' => $article])->render();
         return $this->renderPage();
     }
 

@@ -29,20 +29,7 @@ class Controller extends BaseController
     }
 
 
-    protected function getChild($id){
-        $menus = Menu::where('parent', $id)->get();
-        if(!empty($menus)){
-            $global_menu_array = [];
-            $menu_array = [];
-            foreach ($menus as $menu){
-                $child = $this->getChild($menu->id);
-                array_push($menu_array, ['parent' => $menu, 'page' => Page::where('menu', $menu->id)->get(), 'child' => $child]);
-            }
-            array_push($global_menu_array, $menu_array);
-            return $menu_array;
-        }
-        return false;
-    }
+
 
     protected function getLastPages(){
         return response()->json(Page::where('show', 1)->orderBy('updated_at', 'asc')->select('title', 'image', 'alias')->paginate(10));

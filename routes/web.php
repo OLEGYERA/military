@@ -59,9 +59,10 @@ Route::prefix('mc-api/p1')->group(function () {
 //    Route::post('reference/token', 'Auth\VerifierController@verifyToken')->name('reference_token');
 });
 
-Route::any('/{any?}', function ($any = null) {
-    return view('welcome');
-})->where('any', '.*');
+
+Route::get('/', 'PageController@homePage')->name('home');
+Route::get('{any?}', 'PageController@allPage')->where('any', '.*');
+
 
 
 

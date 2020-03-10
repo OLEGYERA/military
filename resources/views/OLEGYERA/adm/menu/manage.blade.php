@@ -10,7 +10,7 @@
                     @else
                         <option value="{{$menu['parent']->id}}">{{$menu['parent']->name}}</option>
                     @endif
-                    @include(env('VIEW_PATH').'adm.menu.select', ['menus' => $menu['child'], 'step' => 1])
+                    @include('OLEGYERA.adm.menu.select', ['menus' => $menu['child'], 'step' => 1])
                 @endforeach
             </select>
             <input type="name" name="name" placeholder="Назва випадаючого меню" required class="ru-title">
@@ -38,7 +38,7 @@
                         </div>
                     @endif
                 </div>
-                @include(env('VIEW_PATH').'adm.menu.choose_select', ['menus' => $menu['child'], 'step' => 1])
+                @include('OLEGYERA.adm.menu.choose_select', ['menus' => $menu['child'], 'step' => 1])
             @endforeach
         </div>
     </div>

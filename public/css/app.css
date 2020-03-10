@@ -18,7 +18,7 @@ body,
 }
 
 #app {
-  font-family: "Raleway", sans-serif !important;
+  font-family: "Roboto", sans-serif !important;
   position: relative;
   background-size: contain;
 }
@@ -306,6 +306,10 @@ article.military-article-preview.small .preview-content .preview-title {
   background-color: #191508;
   border-top: 3px solid #8E8E8E;
   margin-bottom: 0px;
+}
+
+.military-nau .military-header .bottom-layer.sf-menu {
+  margin-top: 0;
 }
 
 .military-nau .military-header .bottom-layer.sf-menu li {
